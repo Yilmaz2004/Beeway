@@ -1,0 +1,503 @@
+/*------------------------------main---------------------------------------------*/
+
+:root{
+  --clr-neutral-900: hsl(207, 19%, 9%);
+  --clr-neutral-100: hsl(0, 0%, 100%);
+  --clr-accent-400: hsl(142, 90%, 61%);
+  --clr-neon: hsl(317 100% 54%);
+  --clr-bg: hsl(323 21% 16%);
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background: linear-gradient(to bottom right, #e5cde5, #efd6c2, #cff1fc, #ebf4d7);
+  background-repeat: no-repeat;
+  margin: 60px 0 0 0!important;
+  min-height: 100%;
+  width: 100%;
+}
+
+html {
+  margin: 0;
+  min-height: 100%;
+}
+
+* {
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+}
+
+/*------------------------------buttons------------------------------------------*/
+
+.button {
+  cursor: pointer;
+  display: inline;
+  text-decoration: none;
+  color: var(--clr-neutral-900);
+  background-color: #ffc107;
+  border-radius: 5px;
+  padding: 0.5em 1.25em;
+  margin: 0px 7px 0px 7px;
+}
+.button:hover,
+.button:focus {
+  background-color: var(--clr-neutral-100);
+}
+
+.deletebutton {
+  cursor: pointer;
+  display: inline;
+  text-decoration: none;
+  color: var(--clr-neutral-900);
+  background-color: #bfbfbf;
+  border-radius: 5px;
+  padding: 0.5em 1.25em;
+  margin: 0px 7px 0px 7px;
+}
+.deletebutton:hover,
+.deletebutton:focus {
+  background-color: #e60000;
+}
+
+.addbutton {
+  cursor: pointer;
+  display: inline;
+  text-decoration: none;
+  color: var(--clr-neutral-900);
+  background-color: #bfbfbf;
+  border-radius: 5px;
+  padding: 0.5em 1.25em;
+  margin: 0px 7px 0px 7px;
+}
+.addbutton:hover,
+.addbutton:focus {
+  background-color: var(--clr-accent-400);
+}
+
+.editbutton {
+  cursor: pointer;
+  display: inline;
+  font-size: 15px;
+  text-decoration: none;
+  color: var(--clr-neutral-900);
+  background-color: #bfbfbf;
+  border-radius: 5px;
+  padding: 0.5em 1.25em;
+  margin: 0px 7px 0px 7px;
+}
+.editbutton:hover,
+.editbutton:focus {
+  background-color: #008ae6;
+}
+
+#editbutton {
+  cursor: pointer;
+  display: inline;
+  font-size: 15px;
+  text-decoration: none;
+  color: var(--clr-neutral-900);
+  background-color: #bfbfbf;
+  border-radius: 5px;
+  padding: 0.5em 1.25em;
+  margin: 0px 7px 0px 7px;
+}
+#editbutton:hover,
+#editbutton:focus {
+  background-color: #008ae6;
+}
+
+/*---------------------navbar----------------------------------------------------*/
+
+.navbar,
+.navmenu {
+  width: 100%;
+  overflow: hidden;
+  background-color: #1a1a1a;
+  z-index: 1;
+}
+
+.dropdown {
+  display: flex;
+}
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #1a1a1a;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+  left: 345px;
+}
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+.dropdown-content a {
+  font-size: 20px!important;
+}
+
+#navbar_left a,
+#navbar_right a,
+.dropdown-content a{
+  float: left;
+  display: block;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 25px;
+  transition: padding .3s cubic-bezier(.455,.03,.515,.955);
+  cursor: pointer;
+  -webkit-user-select: none; /* Safari */
+  -ms-user-select: none; /* IE 10 and IE 11 */
+  user-select: none; /* Standard syntax */
+}
+#navbar_left a:hover,
+.dropdown-content a:hover {
+  background-color: #333333;
+  padding-left: 2.1rem;
+  padding-right: 2.1rem;
+}
+#navbar_right a:hover {
+  background-color: #333333;
+}
+
+#menua {
+  transition: 0.5s;
+}
+
+#navbar_left a:active,
+#navbar_right a:active {
+  background-color: #04AA6D;
+  color: white;
+}
+#navbar_left {
+  float: left;
+  margin-left: 50px;
+}
+#navbar_right{
+  float: right;
+  margin-right: 50px;
+}
+#navbar_right a {
+  font-size: 30px;
+}
+
+.sticky {
+  position: fixed;
+  top: 0;
+  width: 100%;
+}
+
+.nav-icon {
+  display: none;
+}
+#nav-icon_2 {
+  font-size: 35px;
+}
+
+.menu {
+  background-color: #262626;
+  height: 400px;
+  width: 250px;
+  right: 10px;
+  top: 60px;
+  display: none;
+  position: absolute;
+  z-index: 1;
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
+}
+
+.menu_Buttons {
+  position: absolute;
+  left: 25%;
+  bottom: 25px;
+}
+
+.menu_profiel {
+  position: absolute;
+  left: 30%;
+  top: 25px;
+}
+.menu_profiel_foto {
+  position: absolute;
+  left: -80px;
+  width: 96px;
+  height: 96px;
+  border-radius: 48px;
+  background: white;
+  margin: 1rem;
+  padding: 0.5rem;
+}
+
+#menu_profiel_naam,
+#voornaam {
+  position: absolute;
+  color: white;
+}
+
+#menu_profiel_knop {
+  position: absolute;
+  left: 50px;
+  top: 80px;
+}
+
+@media screen and (max-width:1130px){
+   #navbar_right a {
+    margin-top: 30px;
+    float: left;
+    color: #f2f2f2;
+    text-align: center;
+    padding: 1px;
+    text-decoration: none;
+    font-size: 25px;
+    width: 100%;
+  }
+  #navbar_right{
+    float: none;
+    margin-right: 0px;
+  }
+  .nav-icon {
+    cursor: pointer;
+    float: right;
+    display: block;
+    color: #f2f2f2;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 25px;
+    transition: padding .3s cubic-bezier(.455,.03,.515,.955);
+  }
+  .menu {
+    display: block;
+  }
+  #menulist {
+    transition: 0.5s;
+    opacity: 0.95
+  }
+}
+
+@media screen and (max-width:920px){
+  #navbar_left a {
+    margin-top: 30px;
+    float: left;
+    color: #f2f2f2;
+    text-align: center;
+    padding: 1px;
+    text-decoration: none;
+    font-size: 25px;
+    width: 100%;
+  }
+  #navbar_left {
+    float: none;
+    margin-left: 0px;
+  }
+}
+
+/*---------------------Login-----------------------------------------------------*/
+
+.login {
+  width: 550px;
+  height: 595px;
+  background: #333333;
+  top: 55%;
+  left: 50%;
+  position: absolute;
+  transform: translate(-50%, -50%);
+  padding: 40px;
+  border-radius: 25px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+}
+.login label,
+.admin_adduser label {
+  color: #ffc107;
+}
+#logintittle {
+  color: white;
+  text-align: center;
+}
+
+/* --- style voor alle form inputs --- */
+
+.form input[type=text],
+.form input[type=number],
+.form input[type=email],
+.form input[type=password],
+.form #selectaddedit,
+.form #textaddedit,
+.form #schoolselect,
+.form #rolselect,
+.form .multiselect select {
+  width: 90%;
+  padding: 15px;
+  margin: 5px 0 22px 0;
+  display: inline-block;
+  border: none;
+  background: #4d4d4d;
+  color: white;
+}
+.form input[type=text]:focus,
+.form input[type=number]:focus,
+.form input[type=email]:focus,
+.form input[type=password]:focus,
+.form #selectaddedit:focus,
+.form #textaddedit:focus {
+  background-color: #ffc107;
+  outline: none;
+}
+
+input[type='checkbox'] {
+  box-sizing: border-box;
+  appearance: none;
+  background: white;
+  outline: 2px solid #333;
+  border: 3px solid white;
+  width: 18px;
+  height: 18px;
+}
+input[type='checkbox']:checked {
+  background: #333;
+}
+
+#schoolselect,
+#rolselect {
+  font-size: 17px;
+}
+#schoolselect option,
+#rolselect option {
+  font-size: 20px;
+  text-align: center;
+}
+
+.registerbtn {
+  position: absolute;
+  bottom: 35px;
+  right: 35%;
+  border: none;
+  height: 35px;
+  width: 175px;
+  background: #737373;
+  font-size: 15px;
+  border-radius: 10px;
+}
+.registerbtn:hover {
+  background: #ffc107;
+}
+
+#errormsg {
+  color: red;
+  font-size: 20px;
+  text-align: center;
+  font-weight: 900;
+}
+
+.tooltip {
+  position: relative;
+  display: inline-block;
+  display: grid;
+  place-items: center;
+  color: white;
+  font-weight: bold;
+}
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 200px;
+  background-color: #262626;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 6px 4px;
+
+  /* Position the tooltip */
+  position: absolute;
+  z-index: 1;
+  bottom: 100%;
+  left: 40%;
+  margin-left: -60px;
+}
+.tooltiptext {
+  font-weight: normal;
+}
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+}
+
+.menu_login_info {
+  margin-top: 55px;
+}
+.menu_login_info_txt {
+  color: white;
+  padding: 1rem;
+  font-weight: normal;
+  margin-top: -10px;
+  font-size: 16px;
+}
+.menu_login_info_txt b {
+  font-size: 20px;
+}
+.menu_login_info_txt a {
+  text-decoration: none;
+  color: #b3b3b3;
+}
+.menu_login_info_txt a:hover {
+  color: #999999;
+}
+
+.day-message {
+  margin-top: -40px!important;
+  margin: 0;
+}
+
+/* --- beeway letters op login.html --- */
+
+.header {
+  text-align: center;
+  font-family: "Space Mono", monospace;
+  -webkit-user-select: none; /* Safari */
+  -ms-user-select: none; /* IE 10 and IE 11 */
+  user-select: none; /* Standard syntax */
+}
+.header h2 {
+  margin: 0;
+}
+.title {
+  display: grid;
+  place-items: center;
+}
+.title h1 {
+  font-family: "Space Mono", monospace;
+  font-weight: bold;
+  font-size: 140px;
+  margin: 0;
+  max-width: 100%;
+  max-height: 200px;
+  padding: 5px;
+  background: transparent;
+  border-radius: 25px;
+  background: #ffccff;
+  background-image: url(../media/giphy.gif);
+  background-size: cover;
+  -webkit-background-clip: text;
+  color: transparent;
+  z-index: 1;
+
+  animation: fadename 1.5s ease-in;
+}
+@media screen and (max-width:600px){
+  .title h1 {
+    font-size: 40px;
+    border: 15px solid rgba(0,0,0,0.9);
+  }
+}
+@media screen and (max-height:780px){
+  .title h1 {
+    display: none;
+  }
+}
+#gmnavbar {
+  width: 60%;
+  margin-left: 20%;
+  display: grid;
+  place-items: center;
+  position: fixed;
+  color: white;
+  text-align: center;
+}
