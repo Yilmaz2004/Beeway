@@ -47,15 +47,15 @@ function handlesessioncheckdata (result) {
 
 function handlelogindata (result, div) {
    alert(result);
-  // if (result == "NOK1") {
-  //   $("#errormsg").html("Selecteer een school!");
-  // } else if (result == "NOK2") {
-  //   $("#errormsg").html("Het email, wachtwoord of school komen niet overeen!");
-  // } else {
-  //   const obj = JSON.parse(result);
-  //
-  //   sessionStorage.setItem("token", obj['Token']);
-  //   sessionStorage.setItem("voornaam", obj['Voornaam']);
-  //   window.location.replace("http://192.168.1.95/beeway/beewaylijst.html");
-  // }
+  if (result == "NOK1") {
+    $("#errormsg").html("Selecteer een school!");
+  } else if (result == "NOK2") {
+    $("#errormsg").html("Het email, wachtwoord of school komen niet overeen!");
+  } else {
+    const obj = JSON.parse(result);
+
+    sessionStorage.setItem("token", obj['Token']);
+    sessionStorage.setItem("voornaam", obj['Voornaam']);
+    window.location.replace("http://192.168.1.95/beeway/beewaylijst.html");
+  }
 }

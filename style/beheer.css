@@ -1,0 +1,185 @@
+/*---------------------Beheerlijsten---------------------------------*/
+
+.beewaylijst {
+  margin: 7rem 1rem 0 1rem;
+  background: #7197a9;
+  padding: 1.5rem;
+  border-radius: 1rem;
+}
+
+.beewaylijsttable {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+.beewaylijsttable td, th {
+  padding: 10px;
+  text-align: center;
+}
+.beewaylijsttable td {
+  color: white;
+}
+.beewaylijsttable tr:nth-child(even) {
+  background-color: #172a32;
+  border-radius: 1rem;
+}
+
+.beewaylijstopties {
+  width: 42%;
+  margin: 5px 34%;
+  text-align: center;
+}
+.beewaylijstopties button {
+  border: none;
+  outline: none;
+  cursor: pointer;
+  background-color: #7197a9;
+  font-size: 18px;
+  font-weight: bold;
+  color: #596970;
+}
+.beewaylijstopties u {
+  color: black;
+}
+.beewaylijstopties b {
+  text-align: center;
+  font-size: 20px!important;
+}
+
+/*----------------Beheertoevoegen/aanpassen--------------------------*/
+
+#name {
+  text-align: center;
+  line-height: 20px;
+  color: #ffc107;
+}
+#name a {
+  text-decoration: none;
+  background: none;
+  line-height: 20px;
+  color: #ffc107;
+}
+#name a:hover {
+  color: #737373;
+}
+
+.addedit {
+  width: 1300px;
+  height: 675px;
+  background: #333333;
+  top: 52%;
+  left: 50%;
+  position: absolute;
+  transform: translate(-50%, -50%);
+  padding: 20px 50px;
+  border-radius: 25px;
+}
+.addedit label,
+.addeditschool label {
+  color: #ffc107;
+}
+.addeditBy {
+  color: white;
+}
+
+.addeditschool {
+  width: 550px;
+  height: 450px;
+  background: #333333;
+  top: 52%;
+  left: 50%;
+  position: absolute;
+  transform: translate(-50%, -50%);
+  padding: 20px 50px;
+  border-radius: 25px;
+}
+
+#RP {
+  width: 600px;
+  height: 300px;
+  float: right;
+}
+#LP {
+  width: 600px;
+  height: 300px;
+  float: left;
+}
+
+/*---------------------klassen toevoegen/aanpassen-------------------*/
+
+/*---------------------vakken toevoegen/aanpassen--------------------*/
+
+/*---------------------hoofdthema toevoegen/aanpassen----------------*/
+
+/*---------------------users toevoegen/aanpassen---------------------*/
+
+.admin_adduser {
+  width: 600px;
+  height: 845px;
+  background: #333333;
+  top: 50%;
+  left: 50%;
+  position: absolute;
+  transform: translate(-50%, -50%);
+  padding: 50px;
+  border-radius: 25px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+}
+#adduserbtn {
+  bottom: 20px;
+  right: 35%;
+}
+
+.selectBox {
+  position: relative;
+}
+.selectBox select {
+  width: 100%;
+  font-weight: bold;
+}
+
+.overSelect {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+}
+
+#checkboxes {
+  display: none;
+  border: 1px #dadada solid;
+  position: absolute;
+  background: #4d4d4d;
+  margin-top: -20px;
+  width: 75%;
+  font-size: 20px;
+}
+#checkboxes label {
+  margin: 4px 0px;
+  display: block;
+  color: white;
+}
+#checkboxes label:hover {
+  background-color: #1e90ff;
+}
+#checkboxes input {
+  margin: 0px 9px;
+}
+
+input[type='radio'],
+input[type='checkbox'] {
+  box-sizing: border-box;
+  appearance: none;
+  background: white;
+  outline: 2px solid #333;
+  border: 3px solid white;
+  width: 18px;
+  height: 18px;
+}
+input[type='radio']:checked,
+input[type='checkbox']:checked {
+  background: #333;
+}
+
+/*---------------------scholen toevoegen/aanpassen-------------------*/
