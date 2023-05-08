@@ -2,8 +2,16 @@ var menulist = document.getElementById('menulist')
 var menu = document.getElementById('menu')
 
 menulist.style.height = '60px';
-menu.style.display = 'none';
-menu1.style.display = 'none';
+try {
+  menu.style.display = 'none';
+} catch (e) {
+
+} try {
+  menu1.style.display = 'none';
+} catch (e) {
+
+}
+
 
 function toggleresponsivemenu() {
   if (menulist.style.height == '60px') {
@@ -43,18 +51,6 @@ for(i=0; i<radios.length; i++ ) {
 
 
 $(document).ready(function() {
-  $("#logoutbtn").on("click", function(){
-    event.preventDefault();
-
-    var obj = {'Token' : sessionStorage.getItem("token")};
-    const myJSON = JSON.stringify(obj);
-    HandleApiCall(handlelogoutdata, "Logout", myJSON);
-
-    sessionStorage.clear();
-    window.location.replace("http://192.168.1.95/beeway/login.html");
-  })
-
-
   function dateTime() { // display Good Morning/Afternoon/Evening
     var ndate = new Date();
     var hours = ndate.getHours();
@@ -64,12 +60,6 @@ $(document).ready(function() {
 
   setInterval(dateTime, 1000);
 }); // end document ready
-
-function handlelogoutdata (result, div){
-  if (result == "NOK") {
-    $("#errormsg").html("er was iets mis gegaan, pech!");
-  }
-}
 
 Number.prototype.leadingZeroes = function(len) {
   return (new Array(len).fill('0', 0).join('') + this).slice(-Math.abs(len));

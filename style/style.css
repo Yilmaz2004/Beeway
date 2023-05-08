@@ -119,7 +119,7 @@ html {
 .dropdown {
   display: flex;
 }
-.dropdown-content {
+/* .dropdown-content {
   display: none;
   position: absolute;
   background-color: #1a1a1a;
@@ -132,7 +132,7 @@ html {
 }
 .dropdown-content a {
   font-size: 20px!important;
-}
+} */
 
 #navbar_left a,
 #navbar_right a,
@@ -444,6 +444,40 @@ input[type='checkbox']:checked {
 .day-message {
   margin-top: -40px!important;
   margin: 0;
+}
+
+
+#notifipopup {
+  display: none;
+}
+
+.alert {
+  padding: 20px;
+  background-color: #f44336;
+  color: #d9d9d9;
+  font-size: 18px;
+  opacity: 1;
+  transition: opacity 0.6s;
+  margin-bottom: 15px;
+}
+
+/* .alert.success {
+  background-color: #04AA6D;
+  position: fixed;
+  right: 10px;
+  bottom: 10px;
+}
+.alert.info {
+  background-color: #2196F3;
+  position: fixed;
+  right: 10px;
+  bottom: 10px;
+} */
+.alert.warning {
+  background-color: #ff9800;
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
 }
 
 /* --- beeway letters op login.html --- */
