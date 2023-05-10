@@ -116,6 +116,12 @@
 
 /*---------------------hoofdthema toevoegen/aanpassen----------------*/
 
+#hoofdthemadelete {
+  float: right;
+  font-size:20px;
+  font-weight: bold;
+}
+
 /*---------------------users toevoegen/aanpassen---------------------*/
 
 .admin_adduser {
