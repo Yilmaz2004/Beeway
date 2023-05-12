@@ -25,7 +25,6 @@
        $sth->execute();
        if ($school = $sth->fetch(PDO::FETCH_OBJ)) {
          $schoolid = $school -> schoolid;
-
        }
 
        try {

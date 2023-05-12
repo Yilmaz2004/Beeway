@@ -94,7 +94,7 @@
                 <td><b>'.$maintheme->namethemep4.'</b></td>
                 <td><b>'.$maintheme->namethemep5.'</b></td>
                 <td><b>'.$archive.'</b></td>
-                <td><a  href="php/hoofdthemaarchive.php?themeid='.$maintheme->themeid.'" class="deletebutton">Hoofdthema toevoegen</a></td>
+                <td><a '; ?> onclick='return confirm("Weet je zekker dat je deze beeway wilt terughalen!?")' <?php echo ' href="php/hoofdthemaarchive.php?themeid='.$maintheme->themeid.'" class="deletebutton">Hoofdthema terughalen</a></td>
               </tr>
             ';
 

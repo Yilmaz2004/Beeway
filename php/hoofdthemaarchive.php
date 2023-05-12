@@ -8,5 +8,5 @@ $sth = $conn->prepare($sql);
 $sth->bindParam(':themeid',$_GET['themeid']);
 $sth->execute();
 $_SESSION['success'] = "archive successful";
-header("location: ../index.php?page=hoofdthemaarchive");
+header("location: ../index.php?page=hoofdthemalijst");
 ?>

@@ -45,7 +45,7 @@ while ($row = $sth->fetch(PDO::FETCH_OBJ)) {
       <hr style="margin: 20px 0;">
       <div class="form-wrapper">
       <button type="submit" class="addbutton" style="font-size:20px;font-weight: bold;">Hoofdthema bewerken</button>
-      <a id="hoofdthemadelete"style="font-size:20px;font-weight: bold; float:right;" href="php/hoofdthemaverwijderen.php?themeid='.$row->themeid.'" class="deletebutton">Hoofdthema verwijderen</a>
+      <a id="hoofdthemadelete"style="font-size:20px;font-weight: bold; float:right;"'; ?> onclick='return confirm("Weet je zekker dat je deze beeway wilt verwijderen!?")' <?php echo ' href="php/hoofdthemaverwijderen.php?themeid='.$row->themeid.'" class="deletebutton" >Hoofdthema verwijderen</a>
       </div>
     </form>
   </div>';
