@@ -28,13 +28,11 @@ if (isset($_SESSION['userrol'])) { // controleer of de gebruiker is ingelogd
         <b>|</b>
         <button onclick="window.location.href='index.php?page=klassenlijst';" id="beewaylijstopties4">Klassen</button>
         <b>|</b>
-        <button onclick="window.location.href='index.php?page=vakkenlijst';" id="beewaylijstopties2">Vakken</button>
+        <button onclick="window.location.href='index.php?page=vakkenlijst';" id="beewaylijstopties2"><u>Vakken</u></button>
         <b>|</b>
-        <button onclick="window.location.href='index.php?page=Hoofdthemalijst';" id="beewaylijstopties3"><u>Hoofdthema's</u></button>
+        <button onclick="window.location.href='index.php?page=Hoofdthemalijst';" id="beewaylijstopties3">Hoofdthema's</button>
         <b>|</b>
         <button onclick="window.location.href='index.php?page=userlijst';" id="beewaylijstopties5">Users</button>
-    </div>
-
     <?php } else { ?>
 
     <div class="beewaylijsttitel">
@@ -47,11 +45,12 @@ if (isset($_SESSION['userrol'])) { // controleer of de gebruiker is ingelogd
         <button onclick="window.location.href='index.php?page=beewaylijst';" id="beewaylijstopties1">Beeway's</button>
     </div>
     <?php } ?>
-</div>
+  </div>
 <hr>
 <br>
+
 <?php
-$sql = 'SELECT disciplinename FROM disciplines
+$sql = 'SELECT disciplinename, disciplineid FROM disciplines
         WHERE archive<>1';
 $sth = $conn->prepare($sql);
 $sth->execute();
@@ -60,6 +59,7 @@ echo '<table class="beewaylijsttable">
     <tr>
         <th>
             <h3>vakken</h3>
+            <th><a href="index.php?page=disciplinetoevoegen&disciplineid" class="addbutton">toevoegen</a></th>
         </th>
 
     </tr>';
@@ -68,7 +68,7 @@ echo '<table class="beewaylijsttable">
         echo '
             <tr>
                 <td><b>'.$disciplines->disciplinename.'</b></td>
-                <td><a href="index.php?page=editdiscipline&disciplineid" class="editbutton">bewerken</a></td>
+                <td><a href="index.php?page=disciplinebewerken&disciplineid='.$disciplines->disciplineid.'" class="editbutton">bewerken</a></td>
             </tr>
       ';
     }
@@ -76,8 +76,7 @@ echo '<table class="beewaylijsttable">
     echo '</table>
     <hr>
     <br>
-    <div class="tablebuttons">';
-
+    <div class="tablebuttons"> ';
     if (isset($_GET['offset'])) {
         $pagina = $_GET['offset'] + 1;
         $terug = $_GET['offset'] - 1;
@@ -123,9 +122,13 @@ echo '<table class="beewaylijsttable">
                 </div>
             ';
         }
+
         $_SESSION['error'] = "Er zijn geen resultaten gevonden. Pech!";
     }
     ?>
+    <div <a class="deletebutton archivebutton" href="index.php?page=disciplinearchive"><iconify-icon icon="mdi:trash-outline" style="font-size:20px"></iconify-icon></a>
+  </div>
+
     <hr>
     </div>
     <?php include 'include/error.inc.php'; ?>
