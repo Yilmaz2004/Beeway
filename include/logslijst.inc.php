@@ -1,4 +1,4 @@
-<?php if (isset($_SESSION['userrol'])) { // check if user is logedin ?>
+<?php if (isset($_SESSION['userid']) && isset($_SESSION['userrol']) && $_SESSION['userrol'] == 'superuser') { // check if user is logedin ?>
   <div class="beewaylijst">
       <?php if ($_SESSION['userrol'] == "superuser") { ?>
         <div class="beewaylijsttitel"><h1>Welkom op het super user dashboard</h1></div>
@@ -66,51 +66,68 @@
         });
       </script>
 
-    <hr>
+      <!-- <br> -->
 
+      <input style="width:200px;" type="text" id="myInput" onkeyup="myFunction()" placeholder="zoek op naam..." title="Type in a name">
+
+      <script src="script/tablesearch.js"></script>
+
+    <hr>
     <br>
 
-      <?php
-        if (isset($_GET['offset'])) {
-          $offset = $_GET['offset'] * 4;
-          if (isset($_GET['userid'])) {
-            $sql = 'SELECT l.*, u.firstname, u.lastname
-                    FROM logs as l, users as u
-                    WHERE u.userid=:userid
-                    AND l.userid=u.userid
-                    ORDER BY id DESC
-                    LIMIT 4 OFFSET '.intval($offset);
-            $sth = $conn->prepare($sql);
-            $sth->bindParam(':userid', $_GET['userid']);
-            $sth->execute();
-          } else {
-            $sql = 'SELECT l.*, u.firstname, u.lastname
-                    FROM logs as l, users as u
-                    WHERE l.userid=u.userid
-                    ORDER BY id DESC
-                    LIMIT 4 OFFSET '.intval($offset);
-            $sth = $conn->prepare($sql);
-            $sth->execute();
-          }
+    <?php
+      // Check if offset parameter is set in the URL
+      if (isset($_GET['offset'])) {
+        // Multiply offset by 25 to get the correct number of records to skip
+        $offset = $_GET['offset'] * 50;
+        // Check if userid parameter is also set in the URL
+        if (isset($_GET['userid'])) {
+          // If userid is set, get logs and user data for that specific user
+          $sql = 'SELECT l.*, u.firstname, u.lastname
+                  FROM logs as l, users as u
+                  WHERE u.userid=:userid
+                  AND l.userid=u.userid
+                  ORDER BY id DESC
+                  LIMIT 50 OFFSET '.intval($offset);
+          $sth = $conn->prepare($sql);
+          // Bind userid parameter to the prepared statement
+          $sth->bindParam(':userid', $_GET['userid']);
+          $sth->execute();
         } else {
+          // If userid is not set, get logs and user data for all users
           $sql = 'SELECT l.*, u.firstname, u.lastname
                   FROM logs as l, users as u
                   WHERE l.userid=u.userid
                   ORDER BY id DESC
-                  LIMIT 4';
+                  LIMIT 50 OFFSET '.intval($offset);
           $sth = $conn->prepare($sql);
           $sth->execute();
         }
+        } else {
+        // If offset parameter is not set, get logs and user data for all users starting from the beginning
+        $sql = 'SELECT l.*, u.firstname, u.lastname
+                FROM logs as l, users as u
+                WHERE l.userid=u.userid
+                ORDER BY id DESC
+                LIMIT 50';
+        $sth = $conn->prepare($sql);
+        $sth->execute();
+        }
+
+        // Check if there are any rows returned by the query
         if ($sth->rowCount() > 0) {
+          // Output table headers
           echo '<table class="beewaylijsttable">
-            <tr>
-              <th><h3>datum en tijd</h3></th>
-              <th><h3>user name</h3></th>
-              <th><h3>actie</h3></th>
-              <th><h3>tabel van actie</h3></th>
-              <th><h3>id van actie</h3></th>
-            </tr>';
+                <tr>
+                  <th><h3>username</h3></th>
+                  <th><h3>actie</h3></th>
+                  <th><h3>tabel van actie</h3></th>
+                  <th><h3>id van actie</h3></th>
+                  <th><h3>datum en tijd</h3></th>
+                </tr>';
+          // Output table rows with log data
           while ($logs = $sth->fetch(PDO::FETCH_OBJ)) {
+            // Translate action code to human-readable text
             if ($logs->action == '0') {$action = 'select';}
             elseif ($logs->action == '1') {$action = 'insert';}
             elseif ($logs->action == '2') {$action = 'update';}
@@ -118,6 +135,7 @@
             elseif ($logs->action == '4') {$action = 'login';}
             elseif ($logs->action == '5') {$action = 'logout';}
 
+            // Translate tableid to human-readable text
             if ($logs->tableid == '1') {$tableid = 'beeway';}
             elseif ($logs->tableid == '2') {$tableid = 'vakken';}
             elseif ($logs->tableid == '3') {$tableid = 'groepen';}
@@ -127,57 +145,77 @@
 
             echo'
               <tr>
-                <td><b>'.$logs->date.'</b></td>
-                <td><b>'.$logs->firstname." ".$logs->lastname.'</b></td>
+                <td><b><i>('.$logs->userid.")</i> - ".$logs->firstname." ".$logs->lastname.'</b></td>
                 <td><b>'.$action.'</b></td>
                 <td><b>'.$tableid.'</b></td>
                 <td><b>'.$logs->interactionid.'</b></td>
+                <td><b>'.$logs->date.'</b></td>
               </tr>
             ';
           }
           echo '</table>
 
+          <hr>
+          <br>
+
           <div class="tablebuttons">';
             if (isset($_GET['offset'])) {
+              $pagina = $_GET['offset'] + 1;
               $terug = $_GET['offset'] - 1;
               $volgende = $_GET['offset'] + 1;
               if ($_GET['offset'] == '0') {
                 echo '
+                  <p style="margin:6px;">pagina: '.$pagina.'</p>
                   <a href="index.php?page=logslijst&offset='.$volgende.'" class="addbutton">volgende</a>
                 ';
               } else {
                 echo '
                   <a href="index.php?page=logslijst&offset='.$terug.'" class="addbutton">terug</a>
+                  <p style="margin:6px;">pagina: '.$pagina.'</p>
                   <a href="index.php?page=logslijst&offset='.$volgende.'" class="addbutton">volgende</a>
                 ';
               }
             } else {
               echo '
+                <p style="margin:6px;">pagina: 1</p>
                 <a href="index.php?page=logslijst&offset=1" class="addbutton">volgende</a>
               ';
             }
           echo '</div>';
-
         } else {
           // the query did not return any rows
-          echo '<h2><strong>the query did not return any rows</string></h2>';
+          $pagina = $_GET['offset'] + 1;
+
+          echo '<h2 style="text-align:center;"><strong>Er zijn geen resultaten gevonden</string></h2>';
           if (isset($_GET['offset']) && $_GET['offset'] >= '1') {
             $terug = $_GET['offset'] - 1;
 
-            echo '<div class="tablebuttons"><a href="index.php?page=logslijst&offset='.$terug.'" class="addbutton">terug</a></div>';
+            echo '
+              <div class="tablebuttons">
+                <a href="index.php?page=logslijst&offset='.$terug.'" class="addbutton">terug</a>
+                <p style="margin:6px;">pagina: '.$pagina.'</p>
+              </div>
+              ';
           } else if (isset($_GET['offset'])) {
-            echo '<div class="tablebuttons"><a href="index.php?page=logslijst" class="addbutton">terug</a></div>';
+            echo '
+              <div class="tablebuttons">
+                <a href="index.php?page=logslijst&offset='.$terug.'" class="addbutton">terug</a>
+                <p style="margin:6px;">pagina: '.$pagina.'</p>
+              </div>
+              ';
           }
-          $_SESSION['error'] = "the query did not return any rows. Pech!";
+          $_SESSION['error'] = "Er zijn geen resultaten gevonden. Pech!";
         }
       ?>
 
-
-    <hr>
   </div>
 
-  <?php include 'include/error.inc.php'; ?>
-<?php } else {
-  $_SESSION['error'] = "er ging iets mis. Pech!";
-  header("location: index.php?page=login");
-} ?>
+  <?php
+    include 'include/info.inc.php';
+    include 'include/error.inc.php';
+
+  } else {
+    $_SESSION['error'] = "er ging iets mis. Pech!";
+    header("location: php/logout.php");
+  }
+?>

@@ -32,11 +32,8 @@
           <button onclick="window.location.href='index.php?page=beewaylijst';" id="beewaylijstopties1">Beeway's</button>
       <?php } ?>
     </div>
-
     <hr>
-
     <br>
-
       <?php
       $sql = 'SELECT schoolid FROM users
               WHERE userid= :userid';
@@ -45,13 +42,9 @@
       $sth->execute();
       while ($school = $sth->fetch(PDO::FETCH_OBJ)) {
         $schoolid = $school -> schoolid;
-
       }
-
         if (isset($_GET['offset'])) {
           $offset = $_GET['offset'] * 4;
-
-
         } else {
           $sql = 'SELECT * FROM maintheme
                   WHERE schoolid = :schoolid and archive = 1
@@ -60,7 +53,6 @@
           $sth->bindParam(':schoolid', $schoolid);
           $sth->execute();
         }
-
         if ($sth->rowCount() > 0) {
           echo '<table class="beewaylijsttable">
             <tr>
@@ -83,8 +75,6 @@
             else if ($maintheme->schoolyear == "5") {$schoolyear = "2025/2026";}
             else if ($maintheme->schoolyear == "6") {$schoolyear = "2026/2027";}
             else if ($maintheme->schoolyear == "7") {$schoolyear = "2027/2028";}
-
-
             echo'
               <tr>
                 <td><b>'.$schoolyear.'</b></td>
@@ -97,12 +87,8 @@
                 <td><a '; ?> onclick='return confirm("Weet je zekker dat je deze beeway wilt terughalen!?")' <?php echo ' href="php/hoofdthemaarchive.php?themeid='.$maintheme->themeid.'" class="deletebutton">Hoofdthema terughalen</a></td>
               </tr>
             ';
-
           }
-
-
           echo '</table>
-
           <div class="tablebuttons">';
             if (isset($_GET['offset'])) {
               $terug = $_GET['offset'] - 1;

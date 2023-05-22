@@ -3,7 +3,7 @@
   <div id="navbar_left">
     <?php if (isset($_SESSION['userid'])) { ?>
       <div id="navbuttons">
-        <a href="home.html"><b>Home</b></a>
+        <a href="index.php"><b>Home</b></a>
         <div class="dropdown">
           <a id="dashboard" href="index.php?page=dashboard"><b>dashboard</b></a>
           <!-- <div class="dropdown-content">
@@ -55,7 +55,7 @@
           // Set the value as the innerHTML of the div element
           document.getElementById("voornaam").innerHTML = sessionData;
         </script>
-        <a id="menu_profiel_knop" href="profiel.html" class="editbutton">Profiel</a>
+        <a id="menu_profiel_knop" href="index.php?page=profiel" class="editbutton">Profiel</a>
       </div>
     </div>
     <div class="menu_Buttons">
