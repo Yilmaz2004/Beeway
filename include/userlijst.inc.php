@@ -42,26 +42,71 @@
     <br>
 
       <?php
+        $sql = 'SELECT role, schoolid FROM users WHERE userid=:userid AND archive<>1';
+        $sth = $conn->prepare($sql);
+        $sth->bindParam(':userid', $_SESSION['userid']);
+        $sth->execute();
+        $user = $sth->fetch(PDO::FETCH_OBJ);
+
+        if ($user) { // get logedin user
+          $userrol = $user->role;
+          $userschoolid = $user->schoolid;
+        }
+
         if (isset($_GET['offset'])) {
           $offset = $_GET['offset'] * 25;
 
-          $sql = 'SELECT u.*, s.schoolname FROM users as u, schools as s
-                  WHERE s.schoolid=u.schoolid
-                  AND u.userid<>0
-                  AND u.archive=0
-                  ORDER BY userid
-                  LIMIT 25 OFFSET '.intval($offset);
-          $sth = $conn->prepare($sql);
-          $sth->execute();
+          if ($userrol == 2) { // userlist for superuser
+            $sql = 'SELECT u.*, s.schoolname FROM users as u, schools as s
+                    WHERE s.schoolid=u.schoolid
+                    AND u.userid<>0
+                    AND u.archive=0
+                    ORDER BY userid
+                    LIMIT 25 OFFSET '.intval($offset);
+            $sth = $conn->prepare($sql);
+            $sth->execute();
+          } elseif ($userrol == 1) { // userlist for school admin
+            $sql = 'SELECT u.*, s.schoolname FROM users as u, schools as s
+                    WHERE u.schoolid=:schoolid
+                    AND s.schoolid=u.schoolid
+                    AND u.userid<>0
+                    AND u.role<>2
+                    AND u.archive=0
+                    ORDER BY userid
+                    LIMIT 25 OFFSET '.intval($offset);
+            $sth = $conn->prepare($sql);
+            $sth->bindParam(':schoolid', $userschoolid);
+            $sth->execute();
+          } else { // no accese to userlist
+            $_SESSION['error'] = "er ging iets mis. Pech!";
+            header("location: index.php?page=dashboard");
+          }
         } else {
-          $sql = 'SELECT u.*, s.schoolname FROM users as u, schools as s
-                  WHERE s.schoolid=u.schoolid
-                  AND u.userid<>0
-                  AND u.archive=0
-                  ORDER BY userid
-                  LIMIT 25';
-          $sth = $conn->prepare($sql);
-          $sth->execute();
+          if ($userrol == 2) { // userlist for superuser
+            $sql = 'SELECT u.*, s.schoolname FROM users as u, schools as s
+                    WHERE s.schoolid=u.schoolid
+                    AND u.userid<>0
+                    AND u.archive=0
+                    ORDER BY userid
+                    LIMIT 25';
+            $sth = $conn->prepare($sql);
+            $sth->execute();
+          } elseif ($userrol == 1) { // userlist for school admin
+            $sql = 'SELECT u.*, s.schoolname FROM users as u, schools as s
+                    WHERE u.schoolid=:schoolid
+                    AND s.schoolid=u.schoolid
+                    AND u.userid<>0
+                    AND u.role<>2
+                    AND u.archive=0
+                    ORDER BY userid
+                    LIMIT 25';
+            $sth = $conn->prepare($sql);
+            $sth->bindParam(':schoolid', $userschoolid);
+            $sth->execute();
+          } else { // no accese to userlist
+            $_SESSION['error'] = "er ging iets mis. Pech!";
+            header("location: index.php?page=dashboard");
+          }
         }
 
         if ($sth->rowCount() > 0) {
@@ -97,7 +142,7 @@
               $sth1->execute();
 
               if($sth1->rowCount() == 0) {
-                echo "<td><b><i>(none)</i></b></td>.";
+                echo "<td><b><i>(none)</i></b></td>";
               } else {
                 echo '<td><b>';
                 $totalRows = $sth1->rowCount();

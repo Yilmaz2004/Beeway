@@ -45,7 +45,7 @@
     // Debugging: display the contents of the session
     echo "<pre>", print_r($_SESSION),"</pre>";
 
-    $fileToInclude = 'error.inc.php';
+    $fileToInclude = 'include/error.inc.php';
 
     if (!in_array($fileToInclude, get_included_files())) {
         include $fileToInclude;
