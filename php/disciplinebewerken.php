@@ -16,7 +16,7 @@
          $sth->bindParam(':updatedby', $_SESSION['userid']);
          $sth->bindParam(':disciplineid',$_GET['disciplineid']);
          $sth->execute();
-         $_SESSION['success'] = "updated successful";
+         $_SESSION['info'] = "updated successful";
          header("location: ../index.php?page=vakkenlijst");
        } catch (\Exception $e) {
          echo "string1 ".$e;

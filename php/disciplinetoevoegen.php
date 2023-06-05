@@ -16,7 +16,7 @@
       $sth->bindParam(':createdby', $_SESSION['userid']);
       $sth->bindParam(':updatedby', $_SESSION['userid']);
       $sth->execute();
-      $_SESSION['success'] = "added successful";
+      $_SESSION['info'] = "added successful";
       header("location: ../index.php?page=vakkenlijst");
       }
 

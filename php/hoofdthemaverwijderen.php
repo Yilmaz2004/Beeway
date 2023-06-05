@@ -7,6 +7,6 @@ $sql = "UPDATE maintheme SET archive = 1 WHERE themeid=:themeid ";
 $sth = $conn->prepare($sql);
 $sth->bindParam(':themeid',$_GET['themeid']);
 $sth->execute();
-$_SESSION['success'] = "archive successful";
+$_SESSION['info'] = "archive successful";
 header("location: ../index.php?page=hoofdthemalijst");
 ?>

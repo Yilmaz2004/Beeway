@@ -39,7 +39,7 @@
          $sth->bindParam(':schoolyear', $_POST['schoolyear']);
          $sth->bindParam(':themeid',$_GET['mainthemeid']);
          $sth->execute();
-         $_SESSION['success'] = "updeted successful";
+         $_SESSION['info'] = "updeted successful";
          header("location: ../index.php?page=hoofdthemalijst");
 
        } catch (\Exception $e) {

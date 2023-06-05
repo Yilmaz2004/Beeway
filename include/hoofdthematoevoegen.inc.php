@@ -30,9 +30,36 @@
             <option type="dropdown" placeholder="Schooljaar" value="6">2026/2027</option>
           </optgroup>
         </select>
-      </div>
 
-      <div id="errormsg"></div>
+        <select id="schoolselect" name="groupid">
+          <option value="0" selected="selected">-- selecteer je groep --</option>
+          <?php
+          $sql = "select schoolid from users WHERE userid=:userid";
+          $sth1 = $conn->prepare($sql);
+          $sth1->bindParam(':userid', $_SESSION['userid']);
+          $sth1->execute();
+
+          while ($school = $sth1->fetch(PDO::FETCH_OBJ)) {
+            $sql = 'SELECT groups, groupid
+                    FROM groups
+                    WHERE schoolid =:schoolid
+                    AND archive = "0"';
+            $sth = $conn->prepare($sql);
+            $sth->bindParam(':schoolid', $school->schoolid); // Fix this line
+            $sth->execute();
+
+            while ($group = $sth->fetch(PDO::FETCH_OBJ)) { // Fix variable name here
+              $selected = '';
+              if (isset($_SESSION['school']) && $group->groupid == $_SESSION['school']) {
+                $selected = 'selected="selected"';
+                unset($_SESSION['school']);
+              }
+              echo '<option value="' . $group->groupid . '" ' . $selected . '>' . $group->groups . '</option>';
+            }
+          }
+          ?>
+        </select>
+      </div>
 
       <hr style="margin: 20px 0;">
       <button type="submit" class="addbutton" style="font-size:20px;font-weight: bold;">Hoofdthema toevoegen</button>

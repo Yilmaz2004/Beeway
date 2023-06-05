@@ -88,6 +88,7 @@
             <tr>
               <th><h3>Beeway Naam</h3></th>
               <th><h3>groep(en)</h3></th>
+              <th><h3>hoofdthema</h3></th>
               <th><h3>vakgebied</h3></th>
               <th><h3>concreet doel</h3></th>
               <th><h3>status</h3></th>
@@ -101,14 +102,37 @@
             echo'
               <tr>
                 <td><b>'.$beeway->beewayname.'</b></td>
-                <td><b>'.$beeway->groups.'</b></td>
-                <td><b>'.$beeway->disciplinename.'</b></td>
+                <td><b>'.$beeway->groups.'</b></td>';
 
-                <td><b>'.$beeway->concretegoal.'</b></td>
-                <td><b>'.$status.'</b></td>
-                <td><a href="index.php?page=editbeeway&userid='.$beeway->beewayid.'" class="editbutton">bewerken</a></td>
-              </tr>
-            ';
+                $sql1 = 'SELECT m.*
+                        FROM maintheme AS m
+                        WHERE m.themeid=:themeid
+                        AND m.archive=0';
+                $sth1 = $conn->prepare($sql1);
+                $sth1->bindParam(':themeid', $beeway->mainthemeid);
+                $sth1->execute();
+
+                if ($maintheme = $sth1->fetch(PDO::FETCH_OBJ)) {
+                  if ($beeway->themeperiodid == 1) {
+                  	echo'<td><b>'.$maintheme->namethemep1.'</b></td>';
+                  } elseif ($beeway->themeperiodid == 2) {
+                    echo'<td><b>'.$maintheme->namethemep2.'</b></td>';
+                  } elseif ($beeway->themeperiodid == 3) {
+                    echo'<td><b>'.$maintheme->namethemep3.'</b></td>';
+                  } elseif ($beeway->themeperiodid == 4) {
+                    echo'<td><b>'.$maintheme->namethemep4.'</b></td>';
+                  } else {
+                    echo'<td><b>'.$maintheme->namethemep5.'</b></td>';
+                  }
+                }
+
+                echo '
+                  <td><b>'.$beeway->disciplinename.'</b></td>
+                  <td><b>'.(strlen($beeway->concretegoal) > 35 ? substr($beeway->concretegoal, 0, 35) . '...' : $beeway->concretegoal).'</b></td>
+                  <td><b>'.$status.'</b></td>
+                  <td><a href="index.php?page=editbeeway&beewayid='.$beeway->beewayid.'" class="editbutton">bewerken</a></td>
+                </tr>
+              ';
           }
           echo '</table>
 
@@ -139,6 +163,8 @@
               ';
             }
           echo '</div>';
+        } elseif (!isset($offset)) {
+          $_SESSION['error'] = "Er zijn geen resultaten gevonden. Pech!";
         } else {
           // the query did not return any rows
           $pagina = $_GET['offset'] + 1;
