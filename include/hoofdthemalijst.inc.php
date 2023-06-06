@@ -126,7 +126,7 @@
       ?>
     <hr>
     <a class="deletebutton" href="index.php?page=hoofdthemaarchive"><iconify-icon icon="mdi:trash-outline" style="font-size:20px"  ></iconify-icon></a>
-  </div>
+  </div>                                                                                                                                                                                                     
   <?php include 'include/error.inc.php'; ?>
 <?php } else {
   $_SESSION['error'] = "er ging iets mis. Pech!";
