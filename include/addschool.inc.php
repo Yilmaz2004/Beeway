@@ -1,6 +1,6 @@
 <?php
   // check if user is logged in and has superuser role
-  if (isset($_SESSION['userid']) && isset($_SESSION['userrol']) && $_SESSION['userrol'] == 'superuser') {
+  if (isset($_SESSION['userid']) && isset($_SESSION['userrole']) && $_SESSION['userrole'] == 'superuser') {
 ?>
 
   <div class="addeditschool">
@@ -10,17 +10,17 @@
         <p>Voeg een nieuwe school toe aan het systeem</p>
       </div>
       <hr style="margin: 20px 0;">
-      <label for="NaamThemaP4"><b>School naam</b></label>
-      <input type="text" placeholder="school naam" name="schoolname" id="naamschool" maxlength="40" required oninput="updateWachtwoord()">
+      <label for="schoolname"><b>School naam</b></label>
+      <input type="text" placeholder="school naam" name="schoolname" id="schoolname" maxlength="40" required oninput="updateWachtwoord()">
 
       <br>
       <label for="schooladmin">
-        <input type="checkbox" name="schooladmin" value="1" checked>
+        <input type="checkbox" name="schooladmin" value="1" id="schooladmin" checked>
         <b> automatisch een school admin toevoegen.</b>
       </label>
 
       <br>
-      <label for="wachtwoord">
+      <label>
         <b>de school naam word het email <br>en het wachtwoord word: </b>
         <span id="wachtwoord"></span>
       </label>
@@ -28,7 +28,7 @@
       <script>
         function updateWachtwoord() {
           // get the school name from the input field and remove any spaces
-          var schoolnaam = document.getElementById("naamschool").value.replace(/\s+/g, '');
+          var schoolnaam = document.getElementById("schoolname").value.replace(/\s+/g, '');
           // get the current year
           var jaar = new Date().getFullYear();
           // create the password by combining the school name, year, and exclamation mark
@@ -44,8 +44,8 @@
   </div>
 
 <?php
-  // include any error messages
-  include 'include/error.inc.php';
+  // require_once any error messages
+  require_once 'include/error.inc.php';
 
   } else {
     // redirect to dashboard if user is not logged in or does not have superuser role

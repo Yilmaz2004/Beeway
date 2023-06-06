@@ -1,6 +1,6 @@
-<?php if (isset($_SESSION['userrol'])) { // check if user is logedin ?>
+<?php if (isset($_SESSION['userrole'])) { // check if user is logedin ?>
   <div class="beewaylijst">
-      <?php if ($_SESSION['userrol'] == "superuser") { ?>
+      <?php if ($_SESSION['userrole'] == "superuser") { ?>
         <div class="beewaylijsttitel"><h1>Welkom op het super user dashboard</h1></div>
         <h2>beheer hier dingen (:</h2>
 
@@ -10,7 +10,7 @@
           <button onclick="window.location.href='index.php?page=scholenlijst';" id="beewaylijstopties5"><u>Scholen</u></button>
           <b>|</b>
           <button onclick="window.location.href='index.php?page=logslijst';" id="beewaylijstopties5">Site Logs</button>
-      <?php } else if ($_SESSION['userrol'] == "admin") {?>
+      <?php } else if ($_SESSION['userrole'] == "admin") {?>
         <div class="beewaylijsttitel"><h1>Welkom op het admin dashboard</h1></div>
         <h2>beheer hier dingen (:</h2>
 
@@ -27,7 +27,6 @@
       <?php } else { ?>
         <div class="beewaylijsttitel"><h1>Welkom op het docenten dashboard</h1></div>
         <h2>beheer hier dingen (:</h2>
-
         <div class="beewaylijstopties">
           <button onclick="window.location.href='index.php?page=beewaylijst';" id="beewaylijstopties1">Beeway's</button>
       <?php } ?>
@@ -36,7 +35,7 @@
     <br>
       <?php
       $sql = 'SELECT schoolid FROM users
-              WHERE userid= :userid';
+              WHERE userid=:userid';
       $sth = $conn->prepare($sql);
       $sth->bindParam(':userid', $_SESSION['userid']);
       $sth->execute();
@@ -44,11 +43,11 @@
         $schoolid = $school -> schoolid;
       }
         if (isset($_GET['offset'])) {
-          $offset = $_GET['offset'] * 25;
+          $offset = $_GET['offset'] * 4;
         } else {
           $sql = 'SELECT * FROM maintheme
-                  WHERE schoolid = :schoolid and archive = 0
-                  LIMIT 25';
+                  WHERE schoolid=:schoolid and archive=0
+                  LIMIT 4';
           $sth = $conn->prepare($sql);
           $sth->bindParam(':schoolid', $schoolid);
           $sth->execute();
@@ -62,13 +61,10 @@
               <th><h3>Periode 3</h3></th>
               <th><h3>Periode 4</h3></th>
               <th><h3>Periode 5</h3></th>
-              <th><h3>verwijderd</h3></th>
-              <th><a href="index.php?page=hoofdthematoevoegen" class="addbutton">toevoegen</a></th>
+              <th><a href="index.php?page=addmaintheme" class="addbutton">toevoegen</a></th>
             </tr>';
-          while ($maintheme = $sth->fetch(PDO::FETCH_OBJ)) {
-            if ($maintheme->archive == "1") {$archive = "yes";}
-            else {$archive = "no";}
 
+          while ($maintheme = $sth->fetch(PDO::FETCH_OBJ)) {
             if ($maintheme->schoolyear == "1") {$schoolyear = "2021/2022";}
             else if ($maintheme->schoolyear == "2") {$schoolyear = "2022/2023";}
             else if ($maintheme->schoolyear == "3") {$schoolyear = "2023/2024";}
@@ -85,50 +81,60 @@
                 <td><b>'.$maintheme->namethemep3.'</b></td>
                 <td><b>'.$maintheme->namethemep4.'</b></td>
                 <td><b>'.$maintheme->namethemep5.'</b></td>
-                <td><b>'.$archive.'</b></td>
-                <td><a href="index.php?page=hoofdthemabewerken&mainthemeid='.$maintheme->themeid.'" class="editbutton">bewerken</a></td>
+                <td><a href="index.php?page=editmaintheme&mainthemeid='.$maintheme->themeid.'" class="editbutton">bewerken</a></td>
               </tr>
             ';
           }
           echo '</table>
-
           <div class="tablebuttons">';
-          if (isset($_GET['offset'])) {
-          $terug = $_GET['offset'] - 1;
-          $volgende = $_GET['offset'] + 1;
-          if ($_GET['offset'] == '0') {
-              echo '
-                <a href="index.php?page=hoofdthemalijst&offset='.$volgende.'" class="addbutton">volgende</a>
-              ';
-          } else {
-              echo '
-                <a href="index.php?page=hoofdthemalijst&offset='.$terug.'" class="addbutton">terug</a>
-                <a href="index.php?page=hoofdthemalijst&offset='.$volgende.'" class="addbutton">volgende</a>
-              ';
-          }
-          } else {
-            echo '
-              <a href="index.php?page=hoofdthemalijst&offset=1" class="addbutton">volgende</a>
-            ';
-          }
-            echo '</div>';
-          } else {
-          // the query did not return any rows
-            echo '<h2><strong>the query did not return any rows</strong></h2>'; // Fix: Close the <strong> tag before closing the <h2> tag
-          if (isset($_GET['offset']) && $_GET['offset'] >= '1') {
+            if (isset($_GET['offset'])) {
               $terug = $_GET['offset'] - 1;
-              echo '<div class="tablebuttons"><a href="index.php?page=hoofdthemalijst&offset='.$terug.'" class="addbutton">terug</a></div>';
+              $volgende = $_GET['offset'] + 1;
+              if ($_GET['offset'] == '0') {
+                // echo '
+                //   <a href="index.php?page=scholenlijst&offset='.$volgende.'" class="addbutton">volgende</a>
+                // ';
+              } else {
+                // echo '
+                //   <a href="index.php?page=scholenlijst&offset='.$terug.'" class="addbutton">terug</a>
+                //   <a href="index.php?page=scholenlijst&offset='.$volgende.'" class="addbutton">volgende</a>
+                // ';
+              }
+            } else {
+              // echo '
+              //   <a href="index.php?page=scholenlijst&offset=1" class="addbutton">volgende</a>
+              // ';
+            }
+          echo '</div>';
+        } elseif (!isset($offset)) {
+          echo '<h2 style="text-align: center;"><strong>the query did not return any rows</strong></h2>';
+          echo '<a href="index.php?page=addmaintheme" class="addbutton" id="addfirst">beeway toevoegen</a>';
+          $_SESSION['error'] = "Er zijn geen resultaten gevonden. Pech!";
+        } else {
+          // the query did not return any rows
+          echo '<h2><strong>the query did not return any rows</strong></h2>';
+          if (isset($_GET['offset']) && $_GET['offset'] >= '1') {
+            $terug = $_GET['offset'] - 1;
+            echo '<div class="tablebuttons"><a href="index.php?page=scholenlijst&offset='.$terug.'" class="addbutton">terug</a></div>';
           } else if (isset($_GET['offset'])) {
-              echo '<div class="tablebuttons"><a href="index.php?page=hoofdthemalijst" class="addbutton">terug</a></div>';
+            echo '<div class="tablebuttons"><a href="index.php?page=scholenlijst" class="addbutton">terug</a></div>';
           }
-            $_SESSION['error'] = "the query did not return any rows. Pech!";
-          }
+          $_SESSION['error'] = "Er zijn geen resultaten gevonden. Pech!";
+        }
       ?>
     <hr>
-    <a class="deletebutton" href="index.php?page=hoofdthemaarchive"><iconify-icon icon="mdi:trash-outline" style="font-size:20px"  ></iconify-icon></a>
-  </div>                                                                                                                                                                                                     
-  <?php include 'include/error.inc.php'; ?>
-<?php } else {
-  $_SESSION['error'] = "er ging iets mis. Pech!";
-  header("location: index.php?page=login");
-} ?>
+    <div class="seedeleted">
+      <h3>bekijk verwijderde hoofdthema's: </h3>
+      <a class="deletebutton" id="trashbutton2" href="index.php?page=hoofdthemaarchive"><iconify-icon icon="tabler:trash"></iconify-icon></a>
+    </div>
+    <br>
+    <br>
+  </div>
+<?php
+    require_once 'include/info.inc.php';
+    require_once 'include/error.inc.php';
+  } else {
+    $_SESSION['error'] = "er ging iets mis. Pech!";
+    header("location: php/logout.php");
+  }
+?>

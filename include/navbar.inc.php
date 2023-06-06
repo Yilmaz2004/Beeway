@@ -6,13 +6,6 @@
         <a href="index.php"><b>Home</b></a>
         <div class="dropdown">
           <a id="dashboard" href="index.php?page=dashboard"><b>dashboard</b></a>
-          <!-- <div class="dropdown-content">
-            <a href="beewaylijst.html"><b>Beeway's</b></a>
-            <a href="klassenlijst.html"><b>Klassen</b></a>
-            <a href="vakkenlijst.html"><b>Vakken</b></a>
-            <a href="hoofdthemalijst.html"><b>Hoofdthema's</b></a>
-            <a href="userlijst.html"><b>Users</b></a>
-          </div> -->
         </div>
       </div>
     <?php } else { ?>
@@ -28,7 +21,6 @@
     </div>
   <?php } ?>
 
-
   <div id="navbar_right">
     <?php if (isset($_SESSION['userid'])) { ?>
       <a id="menua" onclick="togglemenu()"><b><iconify-icon icon="ei:navicon" id="nav-icon_2"></iconify-icon></b></a>
@@ -37,8 +29,6 @@
     <?php } ?>
   </div>
 </div>
-
-
 
 <?php if (isset($_SESSION['userid'])) { ?>
   <div class="menu" id="menu">
@@ -63,7 +53,6 @@
     </div>
   </div>
 <?php } else { ?>
-
   <div class="menu" id="menu1">
     <div class="menu_login">
       <h2 id="menu_profiel_naam" style="font-weight:none;margin-left: 40px;" class="day-message">Hallo!</h2>
@@ -74,7 +63,5 @@
       </div>
     </div>
   </div>
-
 <?php } ?>
-
 <script src="script/navbar.js"></script>

@@ -8,7 +8,7 @@ $sql = "SELECT * FROM disciplines WHERE disciplineid = :disciplineid";
   if ($discipline = $sth->fetch(PDO::FETCH_OBJ)) {
   echo '
 <div class="addedit">
-  <form class="form" action="php/disciplinebewerken.php?disciplineid='.$_GET['disciplineid'].'" method="POST">
+  <form class="form" action="php/editdiscipline.php?disciplineid='.$_GET['disciplineid'].'" method="POST">
       <div id="name"><h1>vak bewerken</h1>
       <p>bestaande vak aanpassen in het systeem</p></div>
       <hr style="margin: 20px 0;">
@@ -16,8 +16,6 @@ $sql = "SELECT * FROM disciplines WHERE disciplineid = :disciplineid";
         <label for="NaamThemaP1"><b>vak</b></label>
         <input id="textaddedit" type="text" placeholder="vak" name="disciplinename" value="'.$discipline->disciplinename.'" required>
       </div>
-
-      <div id="errormsg"></div>
 
       <hr style="margin: 20px 0;">
       <div class="form-wrapper">

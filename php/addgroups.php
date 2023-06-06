@@ -1,25 +1,24 @@
 <?php
-  include'../private/dbconnect.php';
+  require_once '../private/dbconnect.php';
   session_start();
-
   // try {
-    if ($_POST['disciplinename'] == '' ) {
+    if ($_POST['groups'] == '' ) {
       $_SESSION['error'] = "vul ff iets in";
-      header("location: ../index.php?page=disciplinetoevoegen");
-    } elseif (checkForIllegalCharacters($_POST['disciplinename'])) {
+      header("location: ../index.php?page=addgroups");
+    } elseif (checkForIllegalCharacters($_POST['groups'])) {
       $_SESSION['error'] = "illegal character used";
-      header("location: ../index.php?page=disciplinetoevoegen");
+      header("location: ../index.php?page=addgroups");
     } else {
-      $sql = "INSERT INTO disciplines (`disciplinename`, `createdby`, `updatedby`) VALUES (:disciplinename, :createdby, :updatedby)";
+      $sql = "INSERT INTO groups (`groups`, `createdby`, `updatedby`)
+              VALUES (:groups, :createdby, :updatedby)";
       $sth = $conn->prepare($sql);
-      $sth->bindParam(':disciplinename', $_POST['disciplinename']);
+      $sth->bindParam(':groups', $_POST['groups']);
       $sth->bindParam(':createdby', $_SESSION['userid']);
       $sth->bindParam(':updatedby', $_SESSION['userid']);
       $sth->execute();
       $_SESSION['info'] = "added successful";
-      header("location: ../index.php?page=vakkenlijst");
+      header("location: ../index.php?page=klassenlijst");
       }
-
   function checkForIllegalCharacters($str) { // check for iliegal characters
     $illegalChars = array('<', '>', '{', '}', '(', ')', '[', ']', '*', '$', '^', '`', '~', '|', '\\', '\'', '"', ':', ';', ',', '/');
     foreach ($illegalChars as $char) {

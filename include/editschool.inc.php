@@ -1,8 +1,7 @@
 <?php
   // check if user is logged in and has superuser role
-  if (isset($_SESSION['userid']) && isset($_SESSION['userrol']) && $_SESSION['userrol'] == 'superuser') {
+  if (isset($_SESSION['userid']) && isset($_SESSION['userrole']) && $_SESSION['userrole'] == 'superuser') {
 ?>
-
   <div class="addeditschool">
     <form class="form" action="php/editschool.php?schoolid=<?php echo $_GET['schoolid']; ?>" method="POST">
       <div id="name">
@@ -25,7 +24,6 @@
           $sth1->bindParam(':userid1', $school->createdby);
           $sth1->bindParam(':userid2', $school->updatedby);
           $sth1->execute();
-
           $y = 1;
           echo'<div id="editedby">';
 
@@ -35,26 +33,19 @@
             } else {
               echo'<p>Als laast bewerkt door: <b>'.$editedby->firstname.' '.$editedby->lastname.'</b></p>';
             }
-
             $y++;
           }
-
           echo'
         </div>
-
         <hr style="margin: 20px 0;">
-        <label for="NaamThemaP4"><b>School naam</b></label>
-
-        <input type="text" placeholder="school naam" name="schoolname" id="naamschool" maxlength="40" value="'.$school->schoolname.'" required>';
+        <label for="schoolname"><b>School naam</b></label>
+        <input type="text" placeholder="school naam" name="schoolname" id="schoolname" maxlength="40" value="'.$school->schoolname.'" required>';
         }
       ?>
       <br>
-
       <hr style="margin: 20px 0;">
       <button type="submit" class="registerbtn" style="font-weight: bold;">School aanpassen</button>
-
       <a class="deletebutton" id="trashbutton" style="bottom:0" onclick='deleteschool()'><iconify-icon icon="tabler:trash"></iconify-icon></a>
-
       <script>
         function deleteschool() {
           var txt;
@@ -65,15 +56,11 @@
           }
         }
       </script>
-
-
     </form>
   </div>
-
 <?php
-  // include any error messages
-  include 'include/error.inc.php';
-
+  // require_once any error messages
+  require_once 'include/error.inc.php';
   } else {
     // redirect to dashboard if user is not logged in or does not have superuser role
     $_SESSION['error'] = "Er ging iets mis. Pech!";

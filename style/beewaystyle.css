@@ -7,16 +7,13 @@
   display: table-row;
   float: right;
 }
-
 .beewayedit div {
   display: table-cell;
 }
-
 .beewayedit div input {
   margin: 0 1rem;
   font-size: 20px;
 }
-
 .beewayedit div p {
   margin: 0 2rem;
 }
@@ -56,7 +53,6 @@ div.cell {
   border: 1px solid #000;
   padding: 10px;
 }
-
 div.cell h2 {
   margin: 0;
   padding: 0;
@@ -70,7 +66,6 @@ div.cell h2 {
   height: 40px;
   margin: -5px -10px;
 }
-
 .textareaobservatie textarea {
   resize: none;
   width: calc(100% + 20px);
@@ -96,7 +91,6 @@ div.cell h2 {
   padding-bottom: 19px;
   border-bottom: 2px solid black;
 }
-
 #orange3 {
   margin-top: 10px;
 }
@@ -107,7 +101,6 @@ div.cell h2 {
   place-items: center;
   background-color: #FEAE00;
 }
-
 .BEEWAY h1 {
   font-weight: bold;
   font-size: 65px;
@@ -115,21 +108,17 @@ div.cell h2 {
   padding: 0;
   margin: 0;
 }
-
 .BEEWAY h2 {
   font-weight: bold;
   text-align: center;
 }
-
 #groepen {
   margin: 20px 0 0 38%;
 }
-
 #groepen label{
   color: white;
   font-size: 1.4rem;
 }
-
 .BEEWAY input {
   width: 65px;
   background-color: #FEAE00;
@@ -142,7 +131,6 @@ div.cell h2 {
   grid-column-end: 7;
   background: white;
 }
-
 .HOOFDTHEMA label{
   font-weight: bold;
   font-size: 20px;
@@ -155,7 +143,6 @@ div.cell h2 {
   grid-row-end: 3;
   background: white;
 }
-
 .CONCREETDOEL textarea {
   resize: none;
   width: calc(100% + 20px);
@@ -174,12 +161,10 @@ div.cell h2 {
   place-items: center;
   grid-template-columns: 16.6% 17.8% 16.6% 17.8% 16.6% 17.8%;
 }
-
 .beoordeling-item {
   margin: 0;
   padding: 0;
 }
-
 .beoordeling input {
   width: 60px!important;
   background-color: white;
@@ -205,7 +190,6 @@ div.cell h2 {
   grid-column-end: 7;
   background: white;
 }
-
 .vakgebied select {
   width: calc(100% + 20px);
   height: 85%;
@@ -225,7 +209,6 @@ div.cell h2 {
   grid-row-end: 5;
   background: #FEE6B3;
 }
-
 .PLANNING textarea {
   background: #FEE6B3;
 }
@@ -238,7 +221,6 @@ div.cell h2 {
   background-color: #FEAE00;
   place-items: center;
 }
-
 .Acties h2 {
   margin: -5px 0 0 0!important;
 }
@@ -264,11 +246,9 @@ div.cell h2 {
 .done {
   background: white;
 }
-
 .done h2 {
   font-size: 21px;
 }
-
 .done input {
   margin: 0.36rem;
   height: 18px;
@@ -280,25 +260,21 @@ div.cell h2 {
   grid-column-end: 3;
   background: white;
 }
-
 .leerdoel {
   grid-column-start: 3;
   grid-column-end: 5;
   background: white;
 }
-
 .evaluatie {
   grid-column-start: 5;
   grid-column-end: 7;
   background: white;
 }
-
 .werkdoel {
   grid-column-start: 7;
   grid-column-end: 9;
   background: white;
 }
-
 .actie {
   grid-column-start: 9;
   grid-column-end: 12;

@@ -2,7 +2,7 @@
 
 .beewaylijst {
   margin: 7rem 1rem 0 1rem;
-  background: #7197a9;
+  background: #8a9297;
   padding: 1.5rem;
   border-radius: 1rem;
 }
@@ -12,41 +12,38 @@
   border-collapse: collapse;
   width: 100%;
 }
-
 .beewaylijsttable td, th {
   padding: 10px;
   text-align: center;
 }
-
 .beewaylijsttable td {
   color: white;
 }
-
 .beewaylijsttable tr:nth-child(even) {
   background-color: #172a32;
   border-radius: 1rem;
 }
-
-.beewaylijstopties {
-  width: 42%;
-  margin: 5px 34%;
-  text-align: center;
+.beewaylijsttable tr:hover {
+  background-color: #595959;
 }
 
+.beewaylijstopties {
+  /* width: 42%;
+  margin: 5px 34%; */
+  text-align: center;
+}
 .beewaylijstopties button {
   border: none;
   outline: none;
   cursor: pointer;
-  background-color: #7197a9;
+  background-color: #8a9297;
   font-size: 18px;
   font-weight: bold;
   color: #596970;
 }
-
 .beewaylijstopties u {
   color: black;
 }
-
 .beewaylijstopties b {
   text-align: center;
   font-size: 20px!important;
@@ -64,14 +61,12 @@
   line-height: 20px;
   color: #ffc107;
 }
-
 #name a {
   text-decoration: none;
   background: none;
   line-height: 20px;
   color: #ffc107;
 }
-
 #name a:hover {
   color: #737373;
 }
@@ -87,12 +82,10 @@
   padding: 20px 50px;
   border-radius: 25px;
 }
-
 .addedit label,
 .addeditschool label {
   color: #ffc107;
 }
-
 .addeditBy {
   color: white;
 }
@@ -114,11 +107,14 @@
   height: 300px;
   float: right;
 }
-
 #LP {
   width: 600px;
   height: 300px;
   float: left;
+}
+
+#addfirst {
+
 }
 
 /*---------------------klassen toevoegen/aanpassen-------------------*/
@@ -126,12 +122,6 @@
 /*---------------------vakken toevoegen/aanpassen--------------------*/
 
 /*---------------------hoofdthema toevoegen/aanpassen----------------*/
-
-#hoofdthemadelete {
-  float: right;
-  font-size:20px;
-  font-weight: bold;
-}
 
 /*---------------------users toevoegen/aanpassen---------------------*/
 
@@ -147,16 +137,20 @@
   border-radius: 25px;
   box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
 }
-
 #adduserbtn {
-  bottom: 20px;
-  right: 35%;
+  bottom: 45px;
+  right: 45%;
+}
+#password-validation,
+#passwordchangewarning {
+  font-size: 15px;
+  color: #ff8533;
+  font-weight: bold;
 }
 
 .selectBox {
   position: relative;
 }
-
 .selectBox select {
   width: 100%;
   font-weight: bold;
@@ -176,22 +170,24 @@
   position: absolute;
   background: #4d4d4d;
   margin-top: -20px;
-  width: 75%;
+  width: 41.5%;
   font-size: 20px;
+  z-index: 1;
 }
-
 #checkboxes label {
   margin: 4px 0px;
   display: block;
   color: white;
 }
-
 #checkboxes label:hover {
   background-color: #1e90ff;
 }
-
 #checkboxes input {
   margin: 0px 9px;
+}
+
+#editedby {
+  color: white;
 }
 
 input[type='radio'],
@@ -204,7 +200,6 @@ input[type='checkbox'] {
   width: 18px;
   height: 18px;
 }
-
 input[type='radio']:checked,
 input[type='checkbox']:checked {
   background: #333;

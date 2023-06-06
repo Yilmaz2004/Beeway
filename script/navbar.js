@@ -12,7 +12,6 @@ try {
 
 }
 
-
 function toggleresponsivemenu() {
   if (menulist.style.height == '60px') {
       menulist.style.height = '100%';

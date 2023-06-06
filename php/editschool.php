@@ -2,7 +2,7 @@
   require_once '../private/dbconnect.php';
   session_start();
 
-  if (isset($_SESSION['userid'], $_SESSION['userrol']) && ($_SESSION['userrol'] === 'superuser' || $_SESSION['userrol'] === 'admin')) {
+  if (isset($_SESSION['userid'], $_SESSION['userrole']) && ($_SESSION['userrole'] === 'superuser' || $_SESSION['userrole'] === 'admin')) {
     // User has the necessary privileges
   } else {
     $_SESSION['error'] = 'Unauthorized access. Please log in with appropriate credentials.';
@@ -21,7 +21,7 @@
       $timestamp = time();
       $date_time = date('Y-m-d H:i:s', $timestamp);
 
-      $sql = "UPDATE schools SET schoolname = :schoolname, updatedby = :updatedby, updatedat = :updatedat
+      $sql = "UPDATE schools SET schoolname=:schoolname, updatedby=:updatedby, updatedat=:updatedat
               WHERE schoolid=:schoolid";
       $sth = $conn->prepare($sql);
       $sth->bindParam(':schoolname', $_POST['schoolname']);
@@ -30,7 +30,8 @@
       $sth->bindParam(':schoolid', $_GET['schoolid']);
       $sth->execute();
 
-      $sql = "INSERT INTO `logs` (`userid`, `useragent`, `action`, `tableid`, `interactionid`) VALUES (:userid, :useragent, '2', '5', :interactionid)";
+      $sql = "INSERT INTO `logs` (`userid`, `useragent`, `action`, `tableid`, `interactionid`)
+              VALUES (:userid, :useragent, '2', '5', :interactionid)";
       $sth = $conn->prepare($sql);
       $sth->bindParam(':userid', $_SESSION['userid']);
       $sth->bindParam(':useragent', $_SESSION['useragent']);

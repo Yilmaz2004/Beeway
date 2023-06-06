@@ -263,7 +263,7 @@ html {
   top: 80px;
 }
 
-@media screen and (max-width:1130px){
+/* @media screen and (max-width:1130px){
    #navbar_right a {
     margin-top: 30px;
     float: left;
@@ -312,7 +312,7 @@ html {
     float: none;
     margin-left: 0px;
   }
-}
+} */
 
 /*---------------------Login-----------------------------------------------------*/
 
@@ -409,13 +409,6 @@ input[type='checkbox']:checked {
   background: #ffc107;
 }
 
-#errormsg {
-  color: red;
-  font-size: 20px;
-  text-align: center;
-  font-weight: 900;
-}
-
 .tooltip {
   position: relative;
   display: inline-block;
@@ -487,13 +480,6 @@ input[type='checkbox']:checked {
   transition: opacity 0.6s;
   margin-bottom: 15px;
 }
-
-/* .alert.success {
-  background-color: #04AA6D;
-  position: fixed;
-  right: 10px;
-  bottom: 10px;
-} */
 .alert.info {
   background-color: #2196F3;
   position: fixed;
@@ -515,9 +501,6 @@ input[type='checkbox']:checked {
   -webkit-user-select: none; /* Safari */
   -ms-user-select: none; /* IE 10 and IE 11 */
   user-select: none; /* Standard syntax */
-}
-.header h2 {
-  margin: 0;
 }
 .title {
   display: grid;
@@ -542,20 +525,14 @@ input[type='checkbox']:checked {
 
   animation: fadename 1.5s ease-in;
 }
-@media screen and (max-width:600px){
-  .title h1 {
-    font-size: 40px;
-    border: 15px solid rgba(0,0,0,0.9);
-  }
-}
-@media screen and (max-height:780px){
+@media screen and (max-height:800px){
   .title h1 {
     display: none;
   }
 }
 #gmnavbar {
-  width: 60%;
-  margin-left: 20%;
+  width: 40%;
+  margin-left: 30%;
   display: grid;
   place-items: center;
   position: fixed;
