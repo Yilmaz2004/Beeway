@@ -54,12 +54,12 @@
         </th>
     </tr>';
     while ($groups = $sth->fetch(PDO::FETCH_OBJ)) {
-        echo '
-            <tr>
-                <td><b>'.$groups->groups.'</b></td>
-                <td><a id="groupsdelete" onclick="return confirm("Weet je zeker dat je deze groep wilt verwijderen!?")" href="php/groupsverwijderen.php?groupid='.$groups->groupid.'" class="deletebutton">groep verwijderen</a></td>
-            </tr>
-      ';
+      echo '
+        <tr>
+            <td><b>'.$groups->groups.'</b></td>
+            <td><a id="groupsdelete" onclick="return confirm(\'Weet je zeker dat je deze groep wilt verwijderen!?\')" href="php/groupsverwijderen.php?groupid='.$groups->groupid.'" class="deletebutton">groep verwijderen</a></td>
+        </tr>
+        ';
     }
     echo '</table>
     <hr>

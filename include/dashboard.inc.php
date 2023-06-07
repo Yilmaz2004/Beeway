@@ -35,18 +35,25 @@
       header("location: index.php?page=login");
     } ?>
     </div>
+
     <hr>
     <br>
+
       <div id="beewaylijstdata" style="text-align:center;">
         <h1>hier kun je al je dingen beheren</h1>
         <h4>leuk dingen bekijken of voeg lekker wat toe dat meot je alemaal zelf weten</h4>
         <h4>veel plezier ig</h4>
       </div>
+
     <hr>
     <br>
   </div>
-  <?php require_once 'include/error.inc.php'; ?>  
-<?php } else { // no valid user logedin
-  $_SESSION['error'] = "er ging iets mis. Pech!";
-  header("location: index.php?page=login");
-} ?>
+
+<?php
+  require_once 'include/error.inc.php';
+
+  } else { // no valid user logedin
+    $_SESSION['error'] = "er ging iets mis. Pech!";
+    header("location: index.php?page=login");
+  }
+?>

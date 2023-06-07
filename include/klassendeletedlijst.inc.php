@@ -17,9 +17,9 @@
         <div class="beewaylijstopties">
           <button onclick="window.location.href='index.php?page=beewaylijst';" id="beewaylijstopties1">Beeway's</button>
           <b>|</b>
-          <button onclick="window.location.href='index.php?page=klassenlijst';" id="beewaylijstopties4">Klassen</button>
+          <button onclick="window.location.href='index.php?page=klassenlijst';" id="beewaylijstopties4"><u>klassen</u></button>
           <b>|</b>
-          <button onclick="window.location.href='index.php?page=vakkenlijst';" id="beewaylijstopties2"><u>Vakken</u></button>
+          <button onclick="window.location.href='index.php?page=vakkenlijst';" id="beewaylijstopties2">Vakken</button>
           <b>|</b>
           <button onclick="window.location.href='index.php?page=Hoofdthemalijst';" id="beewaylijstopties3">Hoofdthema's</button>
           <b>|</b>
@@ -34,29 +34,40 @@
     <hr>
     <br>
       <?php
+      $sql = 'SELECT schoolid FROM users
+              WHERE userid= :userid';
+      $sth = $conn->prepare($sql);
+      $sth->bindParam(':userid', $_SESSION['userid']);
+      $sth->execute();
+      while ($school = $sth->fetch(PDO::FETCH_OBJ)) {
+        $schoolid = $school -> schoolid;
+      }
         if (isset($_GET['offset'])) {
-          $offset = $_GET['offset'] * 25;
+          $offset = $_GET['offset'] * 4;
         } else {
-          $sql = 'SELECT * FROM disciplines
-                  WHERE archive=1
-                  LIMIT 25';
+          $sql = 'SELECT * FROM groups
+                  WHERE schoolid=:schoolid and archive=1
+                  LIMIT 4';
           $sth = $conn->prepare($sql);
+          $sth->bindParam(':schoolid', $schoolid);
           $sth->execute();
         }
         if ($sth->rowCount() > 0) {
           echo '<table class="beewaylijsttable">
             <tr>
-              <th><h3>vak</h3></th>
+              <th><h3>groepen</h3></th>
             </tr>';
-          while ($disciplines = $sth->fetch(PDO::FETCH_OBJ)) {
+          while ($groups = $sth->fetch(PDO::FETCH_OBJ)) {
+            if ($groups->archive == "1") {$archive = "yes";}
+            else {$archive = "no";}
+
             echo'
               <tr>
-                <td><b>'.$disciplines->disciplinename.'</b></td>
+                <td><b>'.$groups->groups.'</b></td>
               </tr>
             ';
           }
           echo '</table>
-
           <div class="tablebuttons">';
             if (isset($_GET['offset'])) {
               $terug = $_GET['offset'] - 1;
@@ -82,7 +93,6 @@
           echo '<h2><strong>the query did not return any rows</strong></h2>';
           if (isset($_GET['offset']) && $_GET['offset'] >= '1') {
             $terug = $_GET['offset'] - 1;
-
             echo '<div class="tablebuttons"><a href="index.php?page=scholenlijst&offset='.$terug.'" class="addbutton">terug</a></div>';
           } else if (isset($_GET['offset'])) {
             echo '<div class="tablebuttons"><a href="index.php?page=scholenlijst" class="addbutton">terug</a></div>';
@@ -92,11 +102,8 @@
       ?>
     <hr>
   </div>
-<?php
-  require_once 'include/error.inc.php';
-  require_once 'include/info.inc.php';
-  } else {
-    $_SESSION['error'] = "er ging iets mis. Pech!";
-    header("location: index.php?page=login");
-  }
-?>
+  <?php require_once 'include/error.inc.php'; ?>
+<?php } else {
+  $_SESSION['error'] = "er ging iets mis. Pech!";
+  header("location: index.php?page=login");
+} ?>

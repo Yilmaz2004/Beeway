@@ -44,7 +44,7 @@
 
     // Log the login attempt
     if ($user) {
-      $sql = 'INSERT INTO logs (userid, useragent, action, tableid, interactionid) VALUES (:userid, :useragent, 4, 6, :interactionid)';
+      $sql = 'INSERT INTO logs (userid, useragent, action, info, tableid, interactionid) VALUES (:userid, :useragent, 4, "User login", 6, :interactionid)';
       $sth = $conn->prepare($sql);
       $sth->bindValue(':userid', $user->userid);
       $sth->bindValue(':useragent', $_SESSION['useragent']);

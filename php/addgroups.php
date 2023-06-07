@@ -9,16 +9,26 @@
       $_SESSION['error'] = "illegal character used";
       header("location: ../index.php?page=addgroups");
     } else {
-      $sql = "INSERT INTO groups (`groups`, `createdby`, `updatedby`)
-              VALUES (:groups, :createdby, :updatedby)";
+
+      $sql = "select schoolid from users WHERE userid=:userid";
+      $sth1 = $conn->prepare($sql);
+      $sth1->bindParam(':userid', $_SESSION['userid']);
+      $sth1->execute();
+
+     while ($school = $sth1->fetch(PDO::FETCH_OBJ)) {
+
+      $sql = "INSERT INTO groups (`groups`, `schoolid`, `createdby`, `updatedby`)
+              VALUES (:groups, :schoolid, :createdby, :updatedby)";
       $sth = $conn->prepare($sql);
       $sth->bindParam(':groups', $_POST['groups']);
+      $sth->bindParam(':schoolid', $school->schoolid);
       $sth->bindParam(':createdby', $_SESSION['userid']);
       $sth->bindParam(':updatedby', $_SESSION['userid']);
       $sth->execute();
       $_SESSION['info'] = "added successful";
       header("location: ../index.php?page=klassenlijst");
       }
+    }
   function checkForIllegalCharacters($str) { // check for iliegal characters
     $illegalChars = array('<', '>', '{', '}', '(', ')', '[', ']', '*', '$', '^', '`', '~', '|', '\\', '\'', '"', ':', ';', ',', '/');
     foreach ($illegalChars as $char) {
