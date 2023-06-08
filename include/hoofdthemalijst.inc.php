@@ -43,11 +43,11 @@
         $schoolid = $school -> schoolid;
       }
         if (isset($_GET['offset'])) {
-          $offset = $_GET['offset'] * 4;
+          $offset = $_GET['offset'] * 30;
         } else {
           $sql = 'SELECT * FROM maintheme
                   WHERE schoolid=:schoolid and archive=0
-                  LIMIT 4';
+                  LIMIT 30';
           $sth = $conn->prepare($sql);
           $sth->bindParam(':schoolid', $schoolid);
           $sth->execute();

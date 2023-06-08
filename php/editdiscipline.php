@@ -17,6 +17,17 @@
          $sth->bindParam(':updatedby', $_SESSION['userid']);
          $sth->bindParam(':disciplineid',$_GET['disciplineid']);
          $sth->execute();
+
+         $disciplineid = $conn->lastInsertId();
+
+         $sql = "INSERT INTO `logs` (`userid`, `useragent`, `action`, `tableid`, `interactionid`) VALUES (:userid, :useragent, '2', '2', :interactionid)";
+         $sth = $conn->prepare($sql);
+         $sth->bindParam(':userid', $_SESSION['userid']);
+         $sth->bindParam(':useragent', $_SESSION['useragent']);
+         $sth->bindParam(':interactionid', $disciplineid);
+         $sth->execute();
+
+
          $_SESSION['info'] = "updated successful";
          header("location: ../index.php?page=vakkenlijst");
        } catch (\Exception $e) {

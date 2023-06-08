@@ -28,8 +28,9 @@
        }
 
        try {
-         $sql = "UPDATE `maintheme` SET `schoolid`=:schoolid, `namethemep1`=:namethemep1, `namethemep2`=:namethemep2, `namethemep3`=:namethemep3, `namethemep4`=:namethemep4, `namethemep5`=:namethemep5, `schoolyear`=:schoolyear
-                WHERE themeid=:themeid ";
+         $sql = "UPDATE `maintheme`
+         SET `schoolid` = :schoolid, `namethemep1` = :namethemep1, `namethemep2` = :namethemep2, `namethemep3` = :namethemep3, `namethemep4` = :namethemep4, `namethemep5` = :namethemep5, `schoolyear` = :schoolyear
+         WHERE themeid = :themeid";
          $sth = $conn->prepare($sql);
          $sth->bindParam(':schoolid', $schoolid);
          $sth->bindParam(':namethemep1', $_POST['namethemep1']);
@@ -38,8 +39,14 @@
          $sth->bindParam(':namethemep4', $_POST['namethemep4']);
          $sth->bindParam(':namethemep5', $_POST['namethemep5']);
          $sth->bindParam(':schoolyear', $_POST['schoolyear']);
-         $sth->bindParam(':themeid',$_GET['mainthemeid']);
-         $sth->execute();
+         $sth->bindParam(':themeid', $_GET['mainthemeid']);
+
+       if ($sth->execute()) {
+           echo "Update succesvol uitgevoerd.";
+       } else {
+           echo "Er is een fout opgetreden bij het uitvoeren van de update.";
+       }
+
          $_SESSION['info'] = "updeted successful";
          header("location: ../index.php?page=hoofdthemalijst");
 
@@ -47,26 +54,24 @@
          echo "string1 ".$e;
        }
 
+       $lastInsertedId = $conn->lastInsertId();
 
+     if ($lastInsertedId !== false && $lastInsertedId !== "") {
+         $sql = "INSERT INTO `logs` (`userid`, `action`, `tableid`, `interactionid`) VALUES (:userid, '2', '4', :interactionid)";
+         $sth = $conn->prepare($sql);
+         $sth->bindParam(':userid', $_SESSION['userid']);
+         $sth->bindParam(':interactionid', $lastInsertedId);
 
-        // $lastInsertedId = $conn->lastInsertId();
-        //
-        // if ($lastInsertedId) {
-        //
-        //   // $sql = "INSERT INTO `logs` (`userid`, `action`, `tableid`, `interactionid`) VALUES (:userid, '1', '6', :interactionid)";
-        //   // $sth = $conn->prepare($sql);
-        //   // $sth->bindParam(':userid', $_SESSION['userid']);
-        //   // $sth->bindParam(':interactionid', $lastInsertedId);
-        //   // $sth->execute();
-        //
-        //   $_SESSION['info'] = 'hoofdthema verandert';
-        //   header('location: ../index.php?page=hoofdthemalijst');
-        //
-        // } else {
-        //   $_SESSION['error'] = 'er ging iets mis. Pech';
-        //   header('location: ../index.php?page=hoofdthemalijst');
-        //
-        // }
+         if ($sth->execute()) {
+             $_SESSION['info'] = 'hoofdthema veranderd';
+         } else {
+             $_SESSION['error'] = 'Er is iets misgegaan tijdens het toevoegen aan logs.';
+         }
+     } else {
+         $_SESSION['error'] = 'Er is iets misgegaan bij het ophalen van het laatst ingevoegde ID.';
+     }
+
+     header('location: ../index.php?page=hoofdthemalijst');
 
       }
     }

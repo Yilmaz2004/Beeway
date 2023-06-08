@@ -25,6 +25,16 @@
       $sth->bindParam(':createdby', $_SESSION['userid']);
       $sth->bindParam(':updatedby', $_SESSION['userid']);
       $sth->execute();
+
+      $groupid = $conn->lastInsertId();
+
+      $sql = "INSERT INTO `logs` (`userid`, `useragent`, `action`, `tableid`, `interactionid`) VALUES (:userid, :useragent, '1', '3', :interactionid)";
+      $sth = $conn->prepare($sql);
+      $sth->bindParam(':userid', $_SESSION['userid']);
+      $sth->bindParam(':useragent', $_SESSION['useragent']);
+      $sth->bindParam(':interactionid', $groupid);
+      $sth->execute();
+
       $_SESSION['info'] = "added successful";
       header("location: ../index.php?page=klassenlijst");
       }
