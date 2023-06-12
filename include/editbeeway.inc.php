@@ -11,19 +11,20 @@
     $sth->execute();
     $result = $sth->fetch(); // Fetch the result from the executed query
     $schoolid = $result['schoolid']; // Access the schoolid value from the result array
+
             $sql = 'SELECT * FROM beeway
                     WHERE beewayid=:beewayid';
             $sth = $conn->prepare($sql);
             $sth->bindParam(':beewayid', $_GET['beewayid']);
             $sth->execute();
+
             if ($beeway = $sth->fetch(PDO::FETCH_OBJ)) {
               echo'
               <div class="beewayedit">
                 <form id="form0" action="php/editbeeway.php?beewayid='.$_GET['beewayid'].'" method="post">
                   <div><input type="text" placeholder="BeewayNaam" name="beewaynaam" value="'.$beeway->beewayname.'" required></div>
                   <div><button id="opslaan" class="addbutton" type="submit" style="font-size: 16px;">Opslaan</button></div>
-                  <div><button '; ?> onclick='return confirm("Weet je zekker dat je deze beeway wilt verwijderen!?")' <?php echo ' href="##" class="deletebutton" style="font-size: 16px;">Verwijderen</button></div>
-                  <div>
+                   <div><button id="beewaydelete" '; ?> onclick='return confirm("Weet je zekker dat je deze beeway wilt verwijderen!?")' <?php echo ' href="php/deletebeeway.php?beewayid='.$beeway->beewayid.'" class="deletebutton" >Verwijderen</button></div>                  <div>
               ';
               $sql1 = 'SELECT firstname, lastname FROM users WHERE userid = :userid1
                       UNION ALL
@@ -61,7 +62,7 @@
               <input type="number" name="groepen" onKeyDown="if(this.value.length==1 && event.keyCode!=8) return false;" min="1" max="8" <?php echo isset($beeway->groupid) ? 'value="'.$beeway->groupid.'"' : ''; ?> required></input>
             </div>
           </div>
-          
+
           <div class="cell HOOFDTHEMA">
             <h2 id="orange">HOOFDTHEMA</h2>
             <input type="radio" name="hoofdthemaid" value="1" <?php echo isset($beeway->themeperiodid) && $beeway->themeperiodid == 1 ? 'checked' : ''; ?> required>

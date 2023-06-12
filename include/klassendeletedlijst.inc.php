@@ -43,11 +43,11 @@
         $schoolid = $school -> schoolid;
       }
         if (isset($_GET['offset'])) {
-          $offset = $_GET['offset'] * 4;
+          $offset = $_GET['offset'] * 25;
         } else {
           $sql = 'SELECT * FROM groups
                   WHERE schoolid=:schoolid and archive=1
-                  LIMIT 4';
+                  LIMIT 25';
           $sth = $conn->prepare($sql);
           $sth->bindParam(':schoolid', $schoolid);
           $sth->execute();
