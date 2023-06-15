@@ -42,10 +42,23 @@
     <br>
 
       <?php
+
+      $sql = 'SELECT b.beewayid, b.beewayname, b.concretegoal, b.status, u.schoolid
+              FROM beeway b
+              JOIN groups g ON b.groupid = g.groupid
+              JOIN linkgroups lg ON g.groupid = lg.groupid
+              JOIN users u ON lg.userid = u.userid
+              WHERE u.role = 0 AND (u.userid = :userid OR b.createdby = :userid)';
+      $sth1 = $conn->prepare($sql);
+      $sth1->bindParam(':userid', $_SESSION['userid']);
+      $sth1->execute();
+
+
+
         $sql1 = 'SELECT schoolid FROM users WHERE userid=:userid';
-        $sth1 = $conn->prepare($sql1);
-        $sth1->bindParam(':userid', $_SESSION['userid']);
-        $sth1->execute();
+        $sth = $conn->prepare($sql1);
+        $sth->bindParam(':userid', $_SESSION['userid']);
+        $sth->execute();
 
         if ($sth1->rowCount() > 0) {
           while ($user = $sth1->fetch(PDO::FETCH_OBJ)) {
