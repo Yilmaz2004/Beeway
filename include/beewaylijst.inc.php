@@ -1,36 +1,36 @@
 <?php if (isset($_SESSION['userid']) && isset($_SESSION['userrole']) && $_SESSION['userrole'] == 'docent' || $_SESSION['userrole'] == 'admin') { // check if user is logedin ?>
   <div class="beewaylijst">
-      <?php if ($_SESSION['userrole'] == "superuser") { ?>
-        <div class="beewaylijsttitel"><h1>Welkom op het super user dashboard</h1></div>
-        <h2>beheer hier dingen (:</h2>
+    <?php if ($_SESSION['userrole'] == "superuser") { ?>
+      <div class="beewaylijsttitel"><h1>Welkom op het super user dashboard</h1></div>
+      <h2>beheer hier dingen (:</h2>
 
-        <div class="beewaylijstopties">
-          <button onclick="window.location.href='index.php?page=userlijst';" id="beewaylijstopties5">Users</button>
-          <b>|</b>
-          <button onclick="window.location.href='index.php?page=scholenlijst';" id="beewaylijstopties5">Scholen</button>
-          <b>|</b>
-          <button onclick="window.location.href='index.php?page=logslijst';" id="beewaylijstopties5">Site Logs</button>
-      <?php } else if ($_SESSION['userrole'] == "admin") {?>
-        <div class="beewaylijsttitel"><h1>Welkom op het admin dashboard</h1></div>
-        <h2>beheer hier dingen (:</h2>
+      <div class="beewaylijstopties">
+        <button onclick="window.location.href='index.php?page=userlijst';" id="beewaylijstopties5">Users</button>
+        <b>|</b>
+        <button onclick="window.location.href='index.php?page=scholenlijst';" id="beewaylijstopties5">Scholen</button>
+        <b>|</b>
+        <button onclick="window.location.href='index.php?page=logslijst';" id="beewaylijstopties5">Site Logs</button>
+    <?php } else if ($_SESSION['userrole'] == "admin") {?>
+      <div class="beewaylijsttitel"><h1>Welkom op het admin dashboard</h1></div>
+      <h2>beheer hier dingen (:</h2>
 
-        <div class="beewaylijstopties">
-          <button onclick="window.location.href='index.php?page=beewaylijst';" id="beewaylijstopties1"><u>Beeway's</u></button>
-          <b>|</b>
-          <button onclick="window.location.href='index.php?page=klassenlijst';" id="beewaylijstopties4">Klassen</button>
-          <b>|</b>
-          <button onclick="window.location.href='index.php?page=vakkenlijst';" id="beewaylijstopties2">Vakken</button>
-          <b>|</b>
-          <button onclick="window.location.href='index.php?page=Hoofdthemalijst';" id="beewaylijstopties3">Hoofdthema's</button>
-          <b>|</b>
-          <button onclick="window.location.href='index.php?page=userlijst';" id="beewaylijstopties5">Users</button>
-      <?php } else { ?>
-        <div class="beewaylijsttitel"><h1>Welkom op het docenten dashboard</h1></div>
-        <h2>beheer hier jouw beeways</h2>
+      <div class="beewaylijstopties">
+        <button onclick="window.location.href='index.php?page=beewaylijst';" id="beewaylijstopties1"><u>Beeway's</u></button>
+        <b>|</b>
+        <button onclick="window.location.href='index.php?page=klassenlijst';" id="beewaylijstopties4">Groepen/Klassen</button>
+        <b>|</b>
+        <button onclick="window.location.href='index.php?page=vakkenlijst';" id="beewaylijstopties2">Vakken</button>
+        <b>|</b>
+        <button onclick="window.location.href='index.php?page=hoofdthemalijst';" id="beewaylijstopties3">Hoofdthema's</button>
+        <b>|</b>
+        <button onclick="window.location.href='index.php?page=userlijst';" id="beewaylijstopties5">Users</button>
+    <?php } else { ?>
+      <div class="beewaylijsttitel"><h1>Welkom op het docenten dashboard</h1></div>
+      <h2>beheer hier jouw beeways</h2>
 
-        <div class="beewaylijstopties">
-          <button onclick="window.location.href='index.php?page=beewaylijst';" id="beewaylijstopties1"><u>Beeway's</u></button>
-      <?php } ?>
+      <div class="beewaylijstopties">
+        <button onclick="window.location.href='index.php?page=beewaylijst';" id="beewaylijstopties1"><u>Beeway's</u></button>
+    <?php } ?>
     </div>
 
     <hr>
@@ -42,23 +42,10 @@
     <br>
 
       <?php
-
-      $sql = 'SELECT b.beewayid, b.beewayname, b.concretegoal, b.status, u.schoolid
-              FROM beeway b
-              JOIN groups g ON b.groupid = g.groupid
-              JOIN linkgroups lg ON g.groupid = lg.groupid
-              JOIN users u ON lg.userid = u.userid
-              WHERE u.role = 0 AND (u.userid = :userid OR b.createdby = :userid)';
-      $sth1 = $conn->prepare($sql);
-      $sth1->bindParam(':userid', $_SESSION['userid']);
-      $sth1->execute();
-
-
-
         $sql1 = 'SELECT schoolid FROM users WHERE userid=:userid';
-        $sth = $conn->prepare($sql1);
-        $sth->bindParam(':userid', $_SESSION['userid']);
-        $sth->execute();
+        $sth1 = $conn->prepare($sql1);
+        $sth1->bindParam(':userid', $_SESSION['userid']);
+        $sth1->execute();
 
         if ($sth1->rowCount() > 0) {
           while ($user = $sth1->fetch(PDO::FETCH_OBJ)) {
@@ -108,45 +95,62 @@
               <th><a href="index.php?page=addbeeway" class="addbutton">toevoegen</a></th>
             </tr>';
 
-          while ($beeway = $sth->fetch(PDO::FETCH_OBJ)) {
-            if ($beeway->status == 0) { $status = "open"; }
-            elseif ($beeway->status == 1) { $status = "closed"; }
-            else { $status = "unknown"; }
-            echo'
+            while ($beeway = $sth->fetch(PDO::FETCH_OBJ)) {
+              if ($beeway->status == 0) {
+                  $status = "open";
+              } elseif ($beeway->status == 1) {
+                  $status = "closed";
+              } else {
+                  $status = "unknown";
+              }
+              echo '
               <tr>
-                <td><b>'.$beeway->beewayname.'</b></td>
-                <td><b>'.$beeway->groups.'</b></td>';
+                  <td><b>'.$beeway->beewayname.'</b></td>
+                  <td><b>'.$beeway->groups.'</b></td>';
 
-                $sql1 = 'SELECT m.*
-                        FROM maintheme AS m
-                        WHERE m.themeid=:themeid
-                        AND m.archive=0';
-                $sth1 = $conn->prepare($sql1);
-                $sth1->bindParam(':themeid', $beeway->mainthemeid);
-                $sth1->execute();
+              $sql1 = 'SELECT m.*
+                      FROM maintheme AS m
+                      WHERE m.themeid=:themeid
+                      AND m.archive=0';
+              $sth1 = $conn->prepare($sql1);
+              $sth1->bindParam(':themeid', $beeway->mainthemeid);
+              $sth1->execute();
 
-                if ($maintheme = $sth1->fetch(PDO::FETCH_OBJ)) {
+              if ($maintheme = $sth1->fetch(PDO::FETCH_OBJ)) {
                   if ($beeway->themeperiodid == 1) {
-                  	echo'<td><b>'.$maintheme->namethemep1.'</b></td>';
+                      echo'<td><b>'.$maintheme->namethemep1.'</b></td>';
                   } elseif ($beeway->themeperiodid == 2) {
-                    echo'<td><b>'.$maintheme->namethemep2.'</b></td>';
+                      echo'<td><b>'.$maintheme->namethemep2.'</b></td>';
                   } elseif ($beeway->themeperiodid == 3) {
-                    echo'<td><b>'.$maintheme->namethemep3.'</b></td>';
+                      echo'<td><b>'.$maintheme->namethemep3.'</b></td>';
                   } elseif ($beeway->themeperiodid == 4) {
-                    echo'<td><b>'.$maintheme->namethemep4.'</b></td>';
+                      echo'<td><b>'.$maintheme->namethemep4.'</b></td>';
                   } else {
-                    echo'<td><b>'.$maintheme->namethemep5.'</b></td>';
+                      echo'<td><b>'.$maintheme->namethemep5.'</b></td>';
                   }
-                }
+              }
 
-                echo '
+              echo '
                   <td><b>'.$beeway->disciplinename.'</b></td>
-                  <td><b>'.(strlen($beeway->concretegoal) > 35 ? substr($beeway->concretegoal, 0, 35) . '...' : $beeway->concretegoal).'</b></td>
-                  <td><b>'.$status.'</b></td>
-                  <td><a href="index.php?page=editbeeway&beewayid='.$beeway->beewayid.'" class="editbutton">bewerken</a></td>
-                </tr>
-              ';
-          }
+                  <td><b>'.(strlen($beeway->concretegoal) > 50 ? substr($beeway->concretegoal, 0, 50) . '...' : $beeway->concretegoal).'</b></td>
+                  <td><b>'.$status.'</b></td>';
+
+              // Check if the user is an admin or has the same groupid as the Beeway
+              $sql2 = 'SELECT COUNT(*) AS count FROM linkgroups WHERE userid = :userid AND groupid = :groupid';
+              $sth2 = $conn->prepare($sql2);
+              $sth2->bindParam(':userid', $_SESSION['userid']);
+              $sth2->bindParam(':groupid', $beeway->groupid);
+              $sth2->execute();
+              $result = $sth2->fetch(PDO::FETCH_OBJ);
+
+              if ($_SESSION['userrole'] === 'admin' || $result->count > 0) {
+                  echo '<td><a href="index.php?page=editbeewaytest&beewayid='.$beeway->beewayid.'" class="editbutton">bewerken</a></td>';
+              } else {
+                echo '<td><a style="background-color:#999999;" href="index.php?page=beeway&beewayid='.$beeway->beewayid.'" class="editbutton">bekijken</a></td>';
+              }
+
+              echo '</tr>';
+            }
           echo '</table>
 
           <hr>
@@ -208,7 +212,7 @@
 
     <div class="seedeleted">
       <h3>bekijk verwijderde beeways: </h3>
-      <a class="deletebutton" id="trashbutton2" href="index.php?page=beewaysdeletedlijst"><iconify-icon icon="tabler:trash"></iconify-icon></a>
+      <a class="deletebutton" id="trashbutton2" href="index.php?page=beewayarchivelijst"><iconify-icon icon="tabler:trash"></iconify-icon></a>
     </div>
     <br>
     <br>
@@ -220,6 +224,6 @@
 
   } else {
     $_SESSION['error'] = "er ging iets mis. Pech!";
-    header("location: php/logout.php");
+    header("Location: php/logout.php");
   }
 ?>

@@ -128,7 +128,7 @@
                   <td><b>'.$beeway->disciplinename.'</b></td>
                   <td><b>'.(strlen($beeway->concretegoal) > 35 ? substr($beeway->concretegoal, 0, 35) . '...' : $beeway->concretegoal).'</b></td>
                   <td><b>'.$status.'</b></td>
-                  <td><a href="index.php?page=editbeeway&beewayid='.$beeway->beewayid.'" class="editbutton">terughalen</a></td>
+                  <td><a href="php/getbackbeeway.php?&beewayid='.$beeway->beewayid.'" class="editbutton">terughalen</a></td>
                 </tr>
               ';
           }
@@ -200,6 +200,6 @@
 
   } else {
     $_SESSION['error'] = "er ging iets mis. Pech!";
-    header("location: php/logout.php");
+    header("Location: php/logout.php");
   }
 ?>

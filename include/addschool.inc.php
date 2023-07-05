@@ -1,7 +1,4 @@
-<?php
-  // check if user is logged in and has superuser role
-  if (isset($_SESSION['userid']) && isset($_SESSION['userrole']) && $_SESSION['userrole'] == 'superuser') {
-?>
+<?php if (isset($_SESSION['userid']) && isset($_SESSION['userrole']) && $_SESSION['userrole'] == 'superuser') { // check if user is logedin ?>
 
   <div class="addeditschool">
     <form class="form" action="php/addschool.php" method="POST">
@@ -44,12 +41,10 @@
   </div>
 
 <?php
-  // require_once any error messages
   require_once 'include/error.inc.php';
 
   } else {
-    // redirect to dashboard if user is not logged in or does not have superuser role
     $_SESSION['error'] = "Er ging iets mis. Pech!";
-    header("location: index.php?page=dashboard");
+    header("Location: index.php?page=dashboard");
   }
 ?>

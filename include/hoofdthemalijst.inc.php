@@ -1,38 +1,40 @@
-<?php if (isset($_SESSION['userrole'])) { // check if user is logedin ?>
+<?php if (isset($_SESSION['userrole']) && isset($_SESSION['userid']) && $_SESSION['userrole'] == 'admin') { // check if user is logedin ?>
   <div class="beewaylijst">
-      <?php if ($_SESSION['userrole'] == "superuser") { ?>
-        <div class="beewaylijsttitel"><h1>Welkom op het super user dashboard</h1></div>
-        <h2>beheer hier dingen (:</h2>
+    <?php if ($_SESSION['userrole'] == "superuser") { ?>
+      <div class="beewaylijsttitel"><h1>Welkom op het super user dashboard</h1></div>
+      <h2>beheer hier dingen (:</h2>
 
-        <div class="beewaylijstopties">
-          <button onclick="window.location.href='index.php?page=userlijst';" id="beewaylijstopties5">Users</button>
-          <b>|</b>
-          <button onclick="window.location.href='index.php?page=scholenlijst';" id="beewaylijstopties5"><u>Scholen</u></button>
-          <b>|</b>
-          <button onclick="window.location.href='index.php?page=logslijst';" id="beewaylijstopties5">Site Logs</button>
-      <?php } else if ($_SESSION['userrole'] == "admin") {?>
-        <div class="beewaylijsttitel"><h1>Welkom op het admin dashboard</h1></div>
-        <h2>beheer hier dingen (:</h2>
+      <div class="beewaylijstopties">
+        <button onclick="window.location.href='index.php?page=userlijst';" id="beewaylijstopties5">Users</button>
+        <b>|</b>
+        <button onclick="window.location.href='index.php?page=scholenlijst';" id="beewaylijstopties5"><u>Scholen</u></button>
+        <b>|</b>
+        <button onclick="window.location.href='index.php?page=logslijst';" id="beewaylijstopties5">Site Logs</button>
+    <?php } else if ($_SESSION['userrole'] == "admin") {?>
+      <div class="beewaylijsttitel"><h1>Welkom op het admin dashboard</h1></div>
+      <h2>beheer hier dingen (:</h2>
 
-        <div class="beewaylijstopties">
-          <button onclick="window.location.href='index.php?page=beewaylijst';" id="beewaylijstopties1">Beeway's</button>
-          <b>|</b>
-          <button onclick="window.location.href='index.php?page=klassenlijst';" id="beewaylijstopties4">Klassen</button>
-          <b>|</b>
-          <button onclick="window.location.href='index.php?page=vakkenlijst';" id="beewaylijstopties2">Vakken</button>
-          <b>|</b>
-          <button onclick="window.location.href='index.php?page=Hoofdthemalijst';" id="beewaylijstopties3"><u>Hoofdthema's</u></button>
-          <b>|</b>
-          <button onclick="window.location.href='index.php?page=userlijst';" id="beewaylijstopties5">Users</button>
-      <?php } else { ?>
-        <div class="beewaylijsttitel"><h1>Welkom op het docenten dashboard</h1></div>
-        <h2>beheer hier dingen (:</h2>
-        <div class="beewaylijstopties">
-          <button onclick="window.location.href='index.php?page=beewaylijst';" id="beewaylijstopties1">Beeway's</button>
-      <?php } ?>
+      <div class="beewaylijstopties">
+        <button onclick="window.location.href='index.php?page=beewaylijst';" id="beewaylijstopties1">Beeway's</button>
+        <b>|</b>
+        <button onclick="window.location.href='index.php?page=klassenlijst';" id="beewaylijstopties4">Groepen/Klassen</button>
+        <b>|</b>
+        <button onclick="window.location.href='index.php?page=vakkenlijst';" id="beewaylijstopties2">Vakken</button>
+        <b>|</b>
+        <button onclick="window.location.href='index.php?page=hoofdthemalijst';" id="beewaylijstopties3"><u>Hoofdthema's</u></button>
+        <b>|</b>
+        <button onclick="window.location.href='index.php?page=userlijst';" id="beewaylijstopties5">Users</button>
+    <?php } else { ?>
+      <div class="beewaylijsttitel"><h1>Welkom op het docenten dashboard</h1></div>
+      <h2>beheer hier dingen (:</h2>
+
+      <div class="beewaylijstopties">
+        <button onclick="window.location.href='index.php?page=beewaylijst';" id="beewaylijstopties1">Beeway's</button>
+    <?php } ?>
     </div>
     <hr>
     <br>
+
       <?php
       $sql = 'SELECT schoolid FROM users
               WHERE userid=:userid';
@@ -42,16 +44,19 @@
       while ($school = $sth->fetch(PDO::FETCH_OBJ)) {
         $schoolid = $school -> schoolid;
       }
+
         if (isset($_GET['offset'])) {
-          $offset = $_GET['offset'] * 30;
+          $offset = $_GET['offset'] * 4;
+
         } else {
           $sql = 'SELECT * FROM maintheme
                   WHERE schoolid=:schoolid and archive=0
-                  LIMIT 30';
+                  LIMIT 4';
           $sth = $conn->prepare($sql);
           $sth->bindParam(':schoolid', $schoolid);
           $sth->execute();
         }
+
         if ($sth->rowCount() > 0) {
           echo '<table class="beewaylijsttable">
             <tr>
@@ -63,7 +68,6 @@
               <th><h3>Periode 5</h3></th>
               <th><a href="index.php?page=addmaintheme" class="addbutton">toevoegen</a></th>
             </tr>';
-
           while ($maintheme = $sth->fetch(PDO::FETCH_OBJ)) {
             if ($maintheme->schoolyear == "1") {$schoolyear = "2021/2022";}
             else if ($maintheme->schoolyear == "2") {$schoolyear = "2022/2023";}
@@ -85,7 +89,9 @@
               </tr>
             ';
           }
+
           echo '</table>
+
           <div class="tablebuttons">';
             if (isset($_GET['offset'])) {
               $terug = $_GET['offset'] - 1;
@@ -115,6 +121,7 @@
           echo '<h2><strong>the query did not return any rows</strong></h2>';
           if (isset($_GET['offset']) && $_GET['offset'] >= '1') {
             $terug = $_GET['offset'] - 1;
+
             echo '<div class="tablebuttons"><a href="index.php?page=scholenlijst&offset='.$terug.'" class="addbutton">terug</a></div>';
           } else if (isset($_GET['offset'])) {
             echo '<div class="tablebuttons"><a href="index.php?page=scholenlijst" class="addbutton">terug</a></div>';
@@ -125,16 +132,19 @@
     <hr>
     <div class="seedeleted">
       <h3>bekijk verwijderde hoofdthema's: </h3>
-      <a class="deletebutton" id="trashbutton2" href="index.php?page=hoofdthemaarchive"><iconify-icon icon="tabler:trash"></iconify-icon></a>
+      <a class="deletebutton" id="trashbutton2" href="index.php?page=hoofdthemaarchivelijst"><iconify-icon icon="tabler:trash"></iconify-icon></a>
     </div>
     <br>
     <br>
   </div>
+
 <?php
-    require_once 'include/info.inc.php';
-    require_once 'include/error.inc.php';
   } else {
     $_SESSION['error'] = "er ging iets mis. Pech!";
-    header("location: php/logout.php");
+    header("Location: index.php?page=dashboard");
+    exit;
   }
+
+  require_once 'include/info.inc.php';
+  require_once 'include/error.inc.php';
 ?>

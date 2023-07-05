@@ -1,4 +1,4 @@
-<?php if (isset($_SESSION['userrole']) && isset($_SESSION['userid'])) { // check if user is logedin ?>
+<?php if (isset($_SESSION['userrole']) && isset($_SESSION['userid']) && $_SESSION['userrole'] == 'docent' ||  $_SESSION['userrole'] == 'admin' || $_SESSION['userrole'] == 'superuser') { // check if user is logedin ?>
   <div class="beewaylijst">
     <?php if ($_SESSION['userrole'] == "superuser") { ?>
       <div class="beewaylijsttitel"><h1>Welkom op het super user dashboard</h1></div>
@@ -17,11 +17,11 @@
       <div class="beewaylijstopties">
         <button onclick="window.location.href='index.php?page=beewaylijst';" id="beewaylijstopties1">Beeway's</button>
         <b>|</b>
-        <button onclick="window.location.href='index.php?page=klassenlijst';" id="beewaylijstopties4">Klassen</button>
+        <button onclick="window.location.href='index.php?page=klassenlijst';" id="beewaylijstopties4">Groepen/Klassen</button>
         <b>|</b>
         <button onclick="window.location.href='index.php?page=vakkenlijst';" id="beewaylijstopties2">Vakken</button>
         <b>|</b>
-        <button onclick="window.location.href='index.php?page=Hoofdthemalijst';" id="beewaylijstopties3">Hoofdthema's</button>
+        <button onclick="window.location.href='index.php?page=hoofdthemalijst';" id="beewaylijstopties3">Hoofdthema's</button>
         <b>|</b>
         <button onclick="window.location.href='index.php?page=userlijst';" id="beewaylijstopties5">Users</button>
     <?php } else if ($_SESSION['userrole'] == "docent") {?>
@@ -32,7 +32,7 @@
         <button onclick="window.location.href='index.php?page=beewaylijst';" id="beewaylijstopties1">Beeway's</button>
     <?php } else { // no valid user logedin
       $_SESSION['error'] = "er ging iets mis. Pech!";
-      header("location: index.php?page=login");
+      header("Location: index.php?page=login");
     } ?>
     </div>
 
@@ -54,6 +54,6 @@
 
   } else { // no valid user logedin
     $_SESSION['error'] = "er ging iets mis. Pech!";
-    header("location: index.php?page=login");
+    header("Location: php/logout.php");
   }
 ?>

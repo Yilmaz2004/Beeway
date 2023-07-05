@@ -1,17 +1,28 @@
 <script src="script/beeway.js"></script>
 
 <?php
-  $sql = 'SELECT schoolid
-       FROM users
-       WHERE schoolid<>0
-       AND archive<>1
-       AND userid=:userid';
-  $sth = $conn->prepare($sql);
-  $sth->bindValue(':userid', $_SESSION['userid']);
-  $sth->execute();
+  if (isset($_SESSION['userid']) && isset($_SESSION['userrole']) && $_SESSION['userrole'] == 'admin' || $_SESSION['userrole'] == 'docent') { // check if user is logedin
+    try {
+      $sql = 'SELECT schoolid
+           FROM users
+           WHERE schoolid<>0
+           AND archive<>1
+           AND userid=:userid';
+      $sth = $conn->prepare($sql);
+      $sth->bindValue(':userid', $_SESSION['userid']);
+      $sth->execute();
 
-  $result = $sth->fetch(); // Fetch the result from the executed query
-  $schoolid = $result['schoolid']; // Access the schoolid value from the result array
+      $result = $sth->fetch();
+
+      if ($result !== false) {
+          $schoolid = $result['schoolid'];
+      } else {
+          // Handle the case when no rows were found
+          $_SESSION['error'] = "er ging iets mis met het ophalen van je school. <br> je kan deze beeway nu niet opslaan!";
+      }
+    } catch (\Exception $e) {
+      $_SESSION['error'] = "er ging iets mis met het ophalen van je school, Pech!";
+    }
 ?>
 
   <div class="beewayedit">
@@ -182,4 +193,16 @@
     </form>
   </div>
 </div>
+
 <hr>
+
+<?php
+  } else {
+    $_SESSION['error'] = "er ging iets mis. Pech!";
+    header("Location: index.php?page=dashboard");
+    exit;
+  }
+
+  require_once 'include/info.inc.php';
+  require_once 'include/error.inc.php';
+?>

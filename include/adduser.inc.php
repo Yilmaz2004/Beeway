@@ -33,16 +33,32 @@
           </div>
           <div id="checkboxes">
             <?php
-              $sql = 'SELECT groups, groupid
-                      FROM groups
-                      WHERE archive=0';
-              $sth = $conn->prepare($sql);
-              $sth->execute();
+              if ($_SESSION['userrole'] == 'admin') {
+                $sql1 = 'SELECT schoolid FROM users
+                        WHERE userid=:userid';
+                $sth1 = $conn->prepare($sql1);
+                $sth1->bindParam(':userid', $_SESSION['userid']);
+                $sth1->execute();
 
-              while ($groups = $sth->fetch(PDO::FETCH_OBJ)) {
+                while ($user = $sth1->fetch(PDO::FETCH_OBJ)) {
+                  $sql = 'SELECT groups, groupid
+                          FROM groups
+                          WHERE schoolid=:schoolid
+                          AND archive=0';
+                  $sth = $conn->prepare($sql);
+                  $sth->bindParam(':schoolid', $user->schoolid);
+                  $sth->execute();
+                }
+
+                while ($groups = $sth->fetch(PDO::FETCH_OBJ)) {
+                  echo'
+                    <label for="groepen">
+                      <input type="checkbox" name="groepen[]" value="'.$groups->groupid.'"/>groepen '.$groups->groups.'</label>
+                  ';
+                }
+              } else {
                 echo'
-                  <label for="groepen">
-                    <input type="checkbox" name="groepen[]" value="'.$groups->groupid.'"/>groepen '.$groups->groups.'</label>
+                  <label for="groepen">je kan als superuser tijdens het aanmaken van de user geen groepen selecteren</label>
                 ';
               }
             ?>
@@ -96,7 +112,6 @@
       <hr>
       <?php } ?>
 
-
       <br>
       <label for="email"><b>Email</b></label>
       <br>
@@ -140,9 +155,10 @@
 <?php
   } else {
     $_SESSION['error'] = "er ging iets mis. Pech!";
-    header("location: index.php?page=dashboard");
+    header("Location: index.php?page=dashboard");
     exit;
   }
 
+  require_once 'include/info.inc.php';
   require_once 'include/error.inc.php';
 ?>
