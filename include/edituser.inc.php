@@ -4,6 +4,7 @@
     <!-- <div class="admin_adduser form"> -->
       <div id="logintittle"><h1>admin - gebruiker aanpassen <iconify-icon icon="akar-icons:person"></iconify-icon></h1></div>
       <hr>
+
       <?php
         $sql = 'SELECT * FROM users
                 WHERE userid=:userid';
@@ -19,6 +20,7 @@
           $sth1->bindParam(':userid1', $user->createdby);
           $sth1->bindParam(':userid2', $user->updatedby);
           $sth1->execute();
+
           $y = 1;
           echo'<div id="editedby">';
 
@@ -30,8 +32,10 @@
             }
             $y++;
           }
+
           echo'
         </div>
+
         <hr>
         <div id="LP">
           <label for="firstname"><b>voornaam</b></label>
@@ -49,53 +53,66 @@
           if ($user->role == "0") {$role = "docent";}
           else if ($user->role == "1") {$role = "school admin";}
           else {$role = "super user";}
-          echo $role.'</b></p>
 
-          <div class="klassenselect" id="klassenselect">
-            <br>
-            <label for="groepen"><b>groepen</b></label>
-            <br>
-            <div class="multiselect">
-              <div class="selectBox" onclick="showCheckboxes()">
-                <select>
-                  <option style="text-align:center;">-- Selecteer groepen die bij de docent horen --</option>
-                </select>
-                <div class="overSelect"></div>
-              </div>
-              <div id="checkboxes">';
-                  $sql2 = 'SELECT groups, groupid
-                          FROM groups
-                          WHERE archive=0';
-                  $sth2 = $conn->prepare($sql2);
-                  $sth2->execute();
+          echo $role.'</b></p>';
 
-                  while ($groups = $sth2->fetch(PDO::FETCH_OBJ)) {
-                    echo'
-                      <label for="groepen">
-                      <input type="checkbox" name="groepen[]" value="'.$groups->groupid.'"
-                    ';
-                    $sql3 = 'SELECT *
-                            FROM linkgroups
-                            WHERE userid=:userid
+          if ($user->role == 1 || $user->role == 2) {
+
+          } else {
+          echo '
+            <div class="klassenselect" id="klassenselect">
+              <br>
+              <label for="groepen"><b>groepen</b></label>
+              <br>
+
+              <div class="multiselect">
+                <div class="selectBox" onclick="showCheckboxes()">
+                  <select>
+                    <option style="text-align:center;">-- Selecteer groepen die bij de docent horen --</option>
+                  </select>
+                  <div class="overSelect"></div>
+                </div>
+                <div id="checkboxes">';
+                    $sql2 = 'SELECT groups, groupid
+                            FROM groups
+                            WHERE schoolid=:schoolid
                             AND archive=0';
-                    $sth3 = $conn->prepare($sql3);
-                    $sth3->bindParam(':userid', $_GET['userid']);
-                    $sth3->execute();
+                    $sth2 = $conn->prepare($sql2);
+                    $sth2->bindParam(':schoolid', $user->schoolid);
+                    $sth2->execute();
 
-                    while ($linkgroups = $sth3->fetch(PDO::FETCH_OBJ)) {
-                      if ($groups->groupid == $linkgroups->groupid) {echo "checked";}
+                    while ($groups = $sth2->fetch(PDO::FETCH_OBJ)) {
+                      echo'
+                        <label for="groepen">
+                        <input type="checkbox" name="groepen[]" value="'.$groups->groupid.'"
+                      ';
+                      $sql3 = 'SELECT *
+                              FROM linkgroups
+                              WHERE userid=:userid
+                              AND archive=0';
+                      $sth3 = $conn->prepare($sql3);
+                      $sth3->bindParam(':userid', $_GET['userid']);
+                      $sth3->execute();
+
+                      while ($linkgroups = $sth3->fetch(PDO::FETCH_OBJ)) {
+                        if ($groups->groupid == $linkgroups->groupid) {echo "checked";}
+                      }
+                      echo'/>groepen '.$groups->groups.'</label>';
                     }
-                    echo'/>groepen '.$groups->groups.'</label>';
-                  }
-                  echo'
+                    echo'
+                </div>
               </div>
-            </div>
-          </div>
+            </div>';
+          }
+
+        echo '
         </div>
         <div id="RP">
+
           <label for="schoolselect"><b>school</b></label>
           <br>
             <p id="editedby">je kan de school niet aanpassen. Deze user zit bij: <b>';
+
             $sql4 = 'SELECT s.schoolname
                     FROM schools as s
                     WHERE s.schoolid = :schoolid
@@ -104,9 +121,11 @@
             $sth4->bindParam(':schoolid', $user->schoolid);
             $sth4->execute();
             $schoolName = $sth4->fetchColumn();
+
             echo $schoolName;
           echo' </b></p>
           <hr>
+
           <br>
           <label for="email"><b>Email</b></label>
           <br>
@@ -117,11 +136,15 @@
           <p id="passwordchangewarning">Als je hier iets invult word dat het nieuwe wachtwoord voor deze user!</p>
           <input type="password" placeholder="Enter Password" name="password" id="password" style="margin-bottom:0;">
           <p id="password-validation"></p>
+
         </div>';
+
         }
         echo'
       <button type="submit" id="adduserbtn" class="registerbtn">aanpasingen opslaan</button>
+
       <a class="deletebutton" id="trashbutton" onclick="deleteuser()"><iconify-icon icon="tabler:trash"></iconify-icon></a>
+
       <script>
         function deleteuser() {
           var txt;
@@ -159,11 +182,15 @@
           }
         });
       </script>
+
     <!-- </div> -->
   </form>';
+
    require_once 'include/error.inc.php';
+
+
   } else {
     $_SESSION['error'] = "er ging iets mis. Pech!";
-    header("location: index.php?page=dashboard");
+    header("Location: index.php?page=dashboard");
   }
 ?>

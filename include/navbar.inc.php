@@ -6,6 +6,13 @@
         <a href="index.php"><b>Home</b></a>
         <div class="dropdown">
           <a id="dashboard" href="index.php?page=dashboard"><b>dashboard</b></a>
+          <!-- <div class="dropdown-content">
+            <a href="beewaylijst.html"><b>Beeway's</b></a>
+            <a href="klassenlijst.html"><b>Klassen</b></a>
+            <a href="vakkenlijst.html"><b>Vakken</b></a>
+            <a href="hoofdthemalijst.html"><b>Hoofdthema's</b></a>
+            <a href="userlijst.html"><b>Users</b></a>
+          </div> -->
         </div>
       </div>
     <?php } else { ?>
@@ -21,6 +28,7 @@
     </div>
   <?php } ?>
 
+
   <div id="navbar_right">
     <?php if (isset($_SESSION['userid'])) { ?>
       <a id="menua" onclick="togglemenu()"><b><iconify-icon icon="ei:navicon" id="nav-icon_2"></iconify-icon></b></a>
@@ -30,6 +38,8 @@
   </div>
 </div>
 
+
+
 <?php if (isset($_SESSION['userid'])) { ?>
   <div class="menu" id="menu">
     <div class="menu_profiel">
@@ -38,13 +48,7 @@
       </div>
       <div class="menu_profiel_rechts" style="margin-top:20px;">
         <h2 id="menu_profiel_naam" style="font-weight:none;" class="day-message">Hallo</h2>
-        <h3 id="voornaam" style="margin:0;margin-left:35px;"></h3>
-        <script type='text/javascript'>
-          // Get the value from session storage
-          var sessionData = sessionStorage.getItem("voornaam");
-          // Set the value as the innerHTML of the div element
-          document.getElementById("voornaam").innerHTML = sessionData;
-        </script>
+        <h3 id="voornaam" style="margin:0;margin-left:35px;"><?php echo $_SESSION['name']; ?></h3>
         <a id="menu_profiel_knop" href="index.php?page=profiel" class="editbutton">Profiel</a>
       </div>
     </div>
@@ -63,5 +67,7 @@
       </div>
     </div>
   </div>
+
 <?php } ?>
+
 <script src="script/navbar.js"></script>

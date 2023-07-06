@@ -1,4 +1,4 @@
-<?php if (isset($_SESSION['userrole'])) { // check if user is logedin ?>
+<?php if (isset($_SESSION['userrole']) && isset($_SESSION['userid']) && $_SESSION['userrole'] == 'admin') { // check if user is logedin ?>
   <div class="beewaylijst">
       <?php if ($_SESSION['userrole'] == "superuser") { ?>
         <div class="beewaylijsttitel"><h1>Welkom op het super user dashboard</h1></div>
@@ -17,11 +17,11 @@
         <div class="beewaylijstopties">
           <button onclick="window.location.href='index.php?page=beewaylijst';" id="beewaylijstopties1">Beeway's</button>
           <b>|</b>
-          <button onclick="window.location.href='index.php?page=klassenlijst';" id="beewaylijstopties4">Klassen</button>
+          <button onclick="window.location.href='index.php?page=klassenlijst';" id="beewaylijstopties4">Groepen/Klassen</button>
           <b>|</b>
           <button onclick="window.location.href='index.php?page=vakkenlijst';" id="beewaylijstopties2"><u>Vakken</u></button>
           <b>|</b>
-          <button onclick="window.location.href='index.php?page=Hoofdthemalijst';" id="beewaylijstopties3">Hoofdthema's</button>
+          <button onclick="window.location.href='index.php?page=hoofdthemalijst';" id="beewaylijstopties3">Hoofdthema's</button>
           <b>|</b>
           <button onclick="window.location.href='index.php?page=userlijst';" id="beewaylijstopties5">Users</button>
       <?php } else { ?>
@@ -55,48 +55,22 @@
               </tr>
             ';
           }
-          echo '</table>
-
-          <div class="tablebuttons">';
-            if (isset($_GET['offset'])) {
-              $terug = $_GET['offset'] - 1;
-              $volgende = $_GET['offset'] + 1;
-              if ($_GET['offset'] == '0') {
-                // echo '
-                //   <a href="index.php?page=scholenlijst&offset='.$volgende.'" class="addbutton">volgende</a>
-                // ';
-              } else {
-                // echo '
-                //   <a href="index.php?page=scholenlijst&offset='.$terug.'" class="addbutton">terug</a>
-                //   <a href="index.php?page=scholenlijst&offset='.$volgende.'" class="addbutton">volgende</a>
-                // ';
-              }
-            } else {
-              // echo '
-              //   <a href="index.php?page=scholenlijst&offset=1" class="addbutton">volgende</a>
-              // ';
-            }
-          echo '</div>';
+          echo '</table>';
         } else {
-          // the query did not return any rows
           echo '<h2><strong>the query did not return any rows</strong></h2>';
-          if (isset($_GET['offset']) && $_GET['offset'] >= '1') {
-            $terug = $_GET['offset'] - 1;
-
-            echo '<div class="tablebuttons"><a href="index.php?page=scholenlijst&offset='.$terug.'" class="addbutton">terug</a></div>';
-          } else if (isset($_GET['offset'])) {
-            echo '<div class="tablebuttons"><a href="index.php?page=scholenlijst" class="addbutton">terug</a></div>';
-          }
           $_SESSION['error'] = "the query did not return any rows. Pech!";
         }
       ?>
     <hr>
   </div>
+</div>
 <?php
-  require_once 'include/error.inc.php';
-  require_once 'include/info.inc.php';
   } else {
     $_SESSION['error'] = "er ging iets mis. Pech!";
-    header("location: index.php?page=login");
+    header("Location: index.php?page=dashboard");
+    exit;
   }
+
+  require_once 'include/info.inc.php';
+  require_once 'include/error.inc.php';
 ?>
