@@ -59,6 +59,7 @@
     <input type="password" placeholder="Enter Password" name="password" id="password" required>
 
     <hr>
+
     <div class="tooltip">Nog geen account?
       <span class="tooltiptext">Vraag de admin van je school om een account voor je aan te maken</span>
     </div>

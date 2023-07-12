@@ -6,13 +6,6 @@
         <a href="index.php"><b>Home</b></a>
         <div class="dropdown">
           <a id="dashboard" href="index.php?page=dashboard"><b>dashboard</b></a>
-          <!-- <div class="dropdown-content">
-            <a href="beewaylijst.html"><b>Beeway's</b></a>
-            <a href="klassenlijst.html"><b>Klassen</b></a>
-            <a href="vakkenlijst.html"><b>Vakken</b></a>
-            <a href="hoofdthemalijst.html"><b>Hoofdthema's</b></a>
-            <a href="userlijst.html"><b>Users</b></a>
-          </div> -->
         </div>
       </div>
     <?php } else { ?>
@@ -28,7 +21,6 @@
     </div>
   <?php } ?>
 
-
   <div id="navbar_right">
     <?php if (isset($_SESSION['userid'])) { ?>
       <a id="menua" onclick="togglemenu()"><b><iconify-icon icon="ei:navicon" id="nav-icon_2"></iconify-icon></b></a>
@@ -38,25 +30,25 @@
   </div>
 </div>
 
-
-
 <?php if (isset($_SESSION['userid'])) { ?>
+
   <div class="menu" id="menu">
     <div class="menu_profiel">
       <div class="menu_profiel_foto">
         <iconify-icon icon="material-symbols:person" style="font-size:80px;"></iconify-icon>
       </div>
       <div class="menu_profiel_rechts" style="margin-top:20px;">
-        <h2 id="menu_profiel_naam" style="font-weight:none;" class="day-message">Hallo</h2>
-        <h3 id="voornaam" style="margin:0;margin-left:35px;"><?php echo $_SESSION['name']; ?></h3>
-        <a id="menu_profiel_knop" href="index.php?page=profiel" class="editbutton">Profiel</a>
+        <h2 id="menu_profiel_naam" style="margin-left:-40px;" class="day-message">Hallo</h2>
+        <h3 id="voornaam" style="margin:0;margin-top:22px;margin-left:40px;width:125px;"><?php echo $_SESSION['name']; ?></h3>
       </div>
     </div>
     <div class="menu_Buttons">
       <a href="php/logout.php" class="editbutton">Uitloggen</a>
     </div>
   </div>
+
 <?php } else { ?>
+
   <div class="menu" id="menu1">
     <div class="menu_login">
       <h2 id="menu_profiel_naam" style="font-weight:none;margin-left: 40px;" class="day-message">Hallo!</h2>

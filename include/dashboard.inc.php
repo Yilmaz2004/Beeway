@@ -41,7 +41,7 @@
 
       <div id="beewaylijstdata" style="text-align:center;">
         <h1>hier kun je al je dingen beheren</h1>
-        <h4>leuk dingen bekijken of voeg lekker wat toe dat meot je alemaal zelf weten</h4>
+        <h4>leuk dingen bekijken of voeg lekker wat toe dat moet je alemaal zelf weten</h4>
         <h4>veel plezier ig</h4>
       </div>
 

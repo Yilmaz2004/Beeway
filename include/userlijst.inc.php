@@ -241,6 +241,7 @@
           $_SESSION['error'] = "Er zijn geen resultaten gevonden. Pech!";
         }
       ?>
+
     <div class="seedeleted">
       <h3>bekijk verwijderde users: </h3>
       <a class="deletebutton" id="trashbutton2" href="index.php?page=userarchivelijst"><iconify-icon icon="tabler:trash"></iconify-icon></a>

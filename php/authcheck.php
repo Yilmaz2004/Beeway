@@ -1,30 +1,29 @@
 <?php
   require_once 'private/dbconnect.php';
-  // session_start();
 
-  // Check if the logged-in user exists and is not archived
-  $sql = 'SELECT role, schoolid FROM users WHERE userid=:userid AND archive=0';
+  $sql = 'SELECT role, schoolid FROM users WHERE userid=:userid ';
   $sth = $conn->prepare($sql);
   $sth->bindParam(':userid', $_SESSION['userid']);
   $sth->execute();
   $user = $sth->fetch(PDO::FETCH_OBJ);
 
   if (!$user) {
-    session_unset(); // remove all session variables
-    session_destroy(); // destroy the session
-    session_start(); // start a new session
+    session_unset();
+    session_destroy();
+    session_start();
 
     try {
-      // Prepare the SQL statement for logging user activity
-      $sql = "INSERT INTO `logs` (`userid`, `useragent`, `action`, `tableid`, `interactionid`) VALUES (:userid, :useragent, '5', '6', :interactionid)";
+      $sql = "INSERT INTO `logs` (`userid`, `useragent`, `action`, `info`, `tableid`, `interactionid`) VALUES (:userid, :useragent, '5', 'Unauthorized access, user does not exist or is archived', '6', :interactionid)";
       $sth = $conn->prepare($sql);
-      $sth->bindParam(':userid', $_SESSION['userid']); // bind the session userid to the SQL statement
-      $sth->bindParam(':useragent', $_SESSION['useragent']); // bind the session useragent to the SQL statement
-      $sth->bindParam(':interactionid', $_SESSION['userid']); // bind the session userid to the SQL statement
-      $sth->execute(); // execute the SQL statement
+      $sth->bindParam(':userid', $_SESSION['userid']);
+      $sth->bindParam(':useragent', $_SESSION['useragent']);
+      $sth->bindParam(':interactionid', $_SESSION['userid']);
+      $sth->execute();
     } catch (\Exception $e) {
-      // handle any exceptions thrown during logging (in this case, do nothing)
-      // $_SESSION['error'] = "Pech";
+      $sql = 'INSERT INTO logs (userid, useragent, action, tableid, interactionid, error) VALUES ("9999", :useragent, 5, "failed to proper logout, no userid set", 6, 0, 5)';
+      $sth = $conn->prepare($sql);
+      $sth->bindValue(':useragent', $_SESSION['useragent']);
+      $sth->execute();
     }
 
     $_SESSION['error'] = 'User not found or archived. Please log in again.';
@@ -36,8 +35,7 @@
   $userschoolid = $user->schoolid;
 
   if ($userrole !== '2') {
-    // Check if the school is valid
-    if ($userschoolid !== '0') {
+    if ($userschoolid !== 0) {
       $sql = 'SELECT COUNT(*) AS count FROM schools WHERE schoolid=:schoolid AND archive=0';
       $sth = $conn->prepare($sql);
       $sth->bindParam(':schoolid', $userschoolid);
@@ -45,21 +43,22 @@
       $schoolCount = $sth->fetchColumn();
 
       if ($schoolCount === 0) {
-        session_unset(); // remove all session variables
-        session_destroy(); // destroy the session
-        session_start(); // start a new session
+        session_unset();
+        session_destroy();
+        session_start();
 
         try {
-          // Prepare the SQL statement for logging user activity
-          $sql = "INSERT INTO `logs` (`userid`, `useragent`, `action`, `tableid`, `interactionid`) VALUES (:userid, :useragent, '5', '6', :interactionid)";
+          $sql = "INSERT INTO `logs` (`userid`, `useragent`, `action`, `info`, `tableid`, `interactionid`) VALUES (:userid, :useragent, '5', 'Unauthorized access, users school does not exist or is archived', '6', :interactionid)";
           $sth = $conn->prepare($sql);
-          $sth->bindParam(':userid', $_SESSION['userid']); // bind the session userid to the SQL statement
-          $sth->bindParam(':useragent', $_SESSION['useragent']); // bind the session useragent to the SQL statement
-          $sth->bindParam(':interactionid', $_SESSION['userid']); // bind the session userid to the SQL statement
-          $sth->execute(); // execute the SQL statement
+          $sth->bindParam(':userid', $_SESSION['userid']);
+          $sth->bindParam(':useragent', $_SESSION['useragent']);
+          $sth->bindParam(':interactionid', $_SESSION['userid']);
+          $sth->execute();
         } catch (\Exception $e) {
-          // handle any exceptions thrown during logging (in this case, do nothing)
-          // $_SESSION['error'] = "Pech";
+          $sql = 'INSERT INTO logs (userid, useragent, action, tableid, interactionid, error) VALUES ("9999", :useragent, 5, "failed to proper logout, no userid set", 6, 0, 5)';
+          $sth = $conn->prepare($sql);
+          $sth->bindValue(':useragent', $_SESSION['useragent']);
+          $sth->execute();
         }
 
         $_SESSION['error'] = 'Invalid school. Please contact the administrator.';

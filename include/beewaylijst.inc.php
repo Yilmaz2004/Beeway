@@ -92,7 +92,7 @@
               <th><h3>vakgebied</h3></th>
               <th><h3>concreet doel</h3></th>
               <th><h3>status</h3></th>
-              <th><a href="index.php?page=addbeeway" class="addbutton">toevoegen</a></th>
+              <th><a href="index.php?page=addbeewaytest" class="addbutton">toevoegen</a></th>
             </tr>';
 
             while ($beeway = $sth->fetch(PDO::FETCH_OBJ)) {
@@ -144,9 +144,19 @@
               $result = $sth2->fetch(PDO::FETCH_OBJ);
 
               if ($_SESSION['userrole'] === 'admin' || $result->count > 0) {
+                if ($beeway->lock == 0 || $beeway->lock == $_SESSION['userid']) {
                   echo '<td><a href="index.php?page=editbeewaytest&beewayid='.$beeway->beewayid.'" class="editbutton">bewerken</a></td>';
+                } else {
+                  echo '<td><a href="#" class="editbutton disabled">bewerken</a></td>';
+                }
               } else {
                 echo '<td><a style="background-color:#999999;" href="index.php?page=beeway&beewayid='.$beeway->beewayid.'" class="editbutton">bekijken</a></td>';
+              }
+
+              if ($_SESSION['userrole'] == 'admin') {
+                if ($beeway->lock != 0) {
+                  echo '<td><a href="php/beewayunlock.php?beewayid='.$beeway->beewayid.'" class="editbutton">unlock</a></td>';
+                }
               }
 
               echo '</tr>';
@@ -182,7 +192,7 @@
           echo '</div>';
         } elseif (!isset($offset)) {
           echo '<h2 style="text-align: center;"><strong>the query did not return any rows</strong></h2>';
-          echo '<a href="index.php?page=addbeeway" class="addbutton" id="addfirst">beeway toevoegen</a>';
+          echo '<a href="index.php?page=addbeewaytest" class="addbutton" id="addfirst">beeway toevoegen</a>';
           $_SESSION['error'] = "Er zijn geen resultaten gevonden. Pech!";
         } else {
           // the query did not return any rows
@@ -224,6 +234,7 @@
 
   } else {
     $_SESSION['error'] = "er ging iets mis. Pech!";
-    header("Location: php/logout.php");
+    header("Location: index.php?page=dashboard");
+    exit;
   }
 ?>

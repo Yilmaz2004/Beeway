@@ -63,7 +63,8 @@
       ?>
     <hr>
   </div>
-</div>
+  </div>
+
 <?php
   } else {
     $_SESSION['error'] = "er ging iets mis. Pech!";

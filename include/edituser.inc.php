@@ -1,7 +1,6 @@
 <?php if (isset($_SESSION['userid']) && isset($_SESSION['userrole']) && $_SESSION['userrole'] == 'superuser' || $_SESSION['userrole'] == 'admin') { // check if user is logedin and if a user was selected to edit ?>
   <script src="script/admin_gebruikertoevoegen.js"></script>
   <?php echo'<form class="form addedit" method="POST" action="php/edituser.php?userid='.$_GET['userid'].'">'; ?>
-    <!-- <div class="admin_adduser form"> -->
       <div id="logintittle"><h1>admin - gebruiker aanpassen <iconify-icon icon="akar-icons:person"></iconify-icon></h1></div>
       <hr>
 
@@ -183,7 +182,6 @@
         });
       </script>
 
-    <!-- </div> -->
   </form>';
 
    require_once 'include/error.inc.php';

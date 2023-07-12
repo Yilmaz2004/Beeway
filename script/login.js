@@ -1,4 +1,5 @@
 // voor de bewegende lettertjes op de login pagina
+
 const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ@#$%";
 let interval = null;
 

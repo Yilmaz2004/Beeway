@@ -2,20 +2,44 @@
   require_once '../private/dbconnect.php';
   session_start();
 
-  $sql = "UPDATE users SET archive=0 
-          WHERE userid=:userid";
-  $sth = $conn->prepare($sql);
-  $sth->bindParam(':userid',$_GET['userid']);
-  $sth->execute();
+  if (isset($_SESSION['userid'], $_SESSION['userrole'])) {
+    try {
+      $sql = "UPDATE users SET archive = 0 WHERE userid = :userid";
+      $sth = $conn->prepare($sql);
+      $sth->bindParam(':userid', $_GET['userid']);
+      $sth->execute();
 
-  $sql2 = "INSERT INTO `logs` (`userid`, `useragent`, `action`, `tableid`, `interactionid`)
-          VALUES (:userid, :useragent, '6', '6', :interactionid)";
-  $sth2 = $conn->prepare($sql2);
-  $sth2->bindParam(':userid', $_SESSION['userid']);
-  $sth2->bindParam(':useragent', $_SESSION['useragent']);
-  $sth2->bindParam(':interactionid', $_GET['userid']);
-  $sth2->execute();
+      $sql = "UPDATE linkgroups SET archive = 0 WHERE userid = :userid";
+      $sth = $conn->prepare($sql);
+      $sth->bindParam(':userid', $_GET['userid']);
+      $sth->execute();
 
-  $_SESSION['info'] = "archive successful";
-  header("location: ../index.php?page=userlijst");
+      $sql = 'INSERT INTO logs (userid, useragent, action, tableid, interactionid, error) VALUES (9999, :useragent, 6, 6, :userid, 0)';
+      $sth = $conn->prepare($sql);
+      $sth->bindValue(':useragent', $_SESSION['useragent']);
+      $sth->bindParam(':userid', $_GET['userid']);
+      $sth->execute();
+
+      $_SESSION['info'] = 'user terug gehaald!';
+      header('location: ../index.php?page=userlijst');
+    } catch (\Exception $e) {
+      $sql = 'INSERT INTO logs (userid, useragent, action, tableid, interactionid, error) VALUES (9999, :useragent, 6, 6, 0, 5)';
+      $sth = $conn->prepare($sql);
+      $sth->bindValue(':useragent', $_SESSION['useragent']);
+      $sth->execute();
+
+      $_SESSION['error'] = "Something went wrong. Please try again.";
+      header("Location: ../index.php?page=userarchivelijst");
+      exit;
+    }
+  } else {
+    $sql = 'INSERT INTO logs (userid, useragent, action, tableid, interactionid, error) VALUES (9999, :useragent, 6, 6, 0, 1)';
+    $sth = $conn->prepare($sql);
+    $sth->bindValue(':useragent', $_SESSION['useragent']);
+    $sth->execute();
+
+    $_SESSION['error'] = 'Unauthorized access. Please log in with appropriate credentials.';
+    header('location: ../index.php?page=userarchivelijst');
+    exit;
+  }
 ?>

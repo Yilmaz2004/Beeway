@@ -2,91 +2,102 @@
   require_once '../private/dbconnect.php';
   session_start();
 
-  // try {
-    if ($_POST['namethemep1'] == '' || $_POST['namethemep2'] == '' || $_POST['namethemep3'] == '' || $_POST['namethemep4'] == '' || $_POST['namethemep5'] == '' || $_POST['schoolyear'] == '') {
-      $_SESSION['error'] = "vul ff iets in";
-      header("location: ../index.php?page=addmaintheme");
-    } elseif (checkForIllegalCharacters($_POST['namethemep1']) || checkForIllegalCharacters($_POST['namethemep2']) || checkForIllegalCharacters($_POST['namethemep3']) || checkForIllegalCharacters($_POST['namethemep4']) || checkForIllegalCharacters($_POST['namethemep5']) || checkForIllegalCharacters($_POST['schoolyear'])) {
-      $_SESSION['error'] = "illegal character used";
-      header("location: ../index.php?page=addmaintheme");
-    } else {
+  if (!isset($_SESSION['userid']) || !isset($_SESSION['userrole']) || $_SESSION['userrole'] !== 'admin') {
+      logErrorAndRedirect('Unauthorized access. Please log in with appropriate credentials.', '2', '2');
+  }
 
-      $sql = "select schoolid from users WHERE userid=:userid";
-      $sth1 = $conn->prepare($sql);
-      $sth1->bindParam(':userid', $_SESSION['userid']);
-      $sth1->execute();
-
-     while ($school = $sth1->fetch(PDO::FETCH_OBJ)) {
-
-       $sql = 'SELECT schoolid FROM users
-               WHERE userid=:userid';
-       $sth = $conn->prepare($sql);
-       $sth->bindParam(':userid', $_SESSION['userid']);
-       $sth->execute();
-       if ($school = $sth->fetch(PDO::FETCH_OBJ)) {
-         $schoolid = $school -> schoolid;
-       }
-
-       try {
-         $sql = "UPDATE `maintheme`
-         SET `schoolid` = :schoolid, `namethemep1` = :namethemep1, `namethemep2` = :namethemep2, `namethemep3` = :namethemep3, `namethemep4` = :namethemep4, `namethemep5` = :namethemep5, `schoolyear` = :schoolyear
-         WHERE themeid = :themeid";
-         $sth = $conn->prepare($sql);
-         $sth->bindParam(':schoolid', $schoolid);
-         $sth->bindParam(':namethemep1', $_POST['namethemep1']);
-         $sth->bindParam(':namethemep2', $_POST['namethemep2']);
-         $sth->bindParam(':namethemep3', $_POST['namethemep3']);
-         $sth->bindParam(':namethemep4', $_POST['namethemep4']);
-         $sth->bindParam(':namethemep5', $_POST['namethemep5']);
-         $sth->bindParam(':schoolyear', $_POST['schoolyear']);
-         $sth->bindParam(':themeid', $_GET['mainthemeid']);
-
-       if ($sth->execute()) {
-           echo "Update succesvol uitgevoerd.";
-       } else {
-           echo "Er is een fout opgetreden bij het uitvoeren van de update.";
-       }
-
-         $_SESSION['info'] = "updeted successful";
-         header("location: ../index.php?page=hoofdthemalijst");
-
-       } catch (\Exception $e) {
-         echo "string1 ".$e;
-       }
-
-       $lastInsertedId = $conn->lastInsertId();
-
-     if ($lastInsertedId !== false && $lastInsertedId !== "") {
-         $sql = "INSERT INTO `logs` (`userid`, `action`, `tableid`, `interactionid`) VALUES (:userid, '2', '4', :interactionid)";
-         $sth = $conn->prepare($sql);
-         $sth->bindParam(':userid', $_SESSION['userid']);
-         $sth->bindParam(':interactionid', $lastInsertedId);
-
-         if ($sth->execute()) {
-             $_SESSION['info'] = 'hoofdthema veranderd';
-         } else {
-             $_SESSION['error'] = 'Er is iets misgegaan tijdens het toevoegen aan logs.';
-         }
-     } else {
-         $_SESSION['error'] = 'Er is iets misgegaan bij het ophalen van het laatst ingevoegde ID.';
-     }
-
-     header('location: ../index.php?page=hoofdthemalijst');
-
+  try {
+      $requiredFields = array('namethemep1', 'namethemep2', 'namethemep3', 'namethemep4', 'namethemep5', 'schoolyear');
+      foreach ($requiredFields as $field) {
+          if (empty($_POST[$field])) {
+              logErrorAndRedirect('Please fill in all fields.', '2', '4');
+          } elseif (checkForIllegalCharacters($_POST[$field])) {
+              logErrorAndRedirect('Illegal character used.', '2', '4');
+          }
       }
-    }
-  // } catch (\Exception $e) {
-  //   $_SESSION['error'] = "er ging iets mis. Pech";
-  //   header("location: ../index.php?page=userlijst");
-  // }
 
-  function checkForIllegalCharacters($str) { // check for iliegal characters
-    $illegalChars = array('<', '>', '{', '}', '(', ')', '[', ']', '*', '$', '^', '`', '~', '|', '\\', '\'', '"', ':', ';', ',', '/');
-    foreach ($illegalChars as $char) {
-      if (strpos($str, $char) !== false) {
-        return true;
+      $userId = $_SESSION['userid'];
+
+      $schoolId = getSchoolIdForUser($userId);
+      if ($schoolId === false) {
+          logErrorAndRedirect('Failed to retrieve school ID for the user.', '2', '4');
       }
-    }
-    return false;
+
+      $mainThemeId = $_GET['mainthemeid'];
+      $namethemep1 = $_POST['namethemep1'];
+      $namethemep2 = $_POST['namethemep2'];
+      $namethemep3 = $_POST['namethemep3'];
+      $namethemep4 = $_POST['namethemep4'];
+      $namethemep5 = $_POST['namethemep5'];
+      $schoolYear = $_POST['schoolyear'];
+
+      $sql = "UPDATE `maintheme` SET `schoolid`=:schoolid, `namethemep1`=:namethemep1, `namethemep2`=:namethemep2, `namethemep3`=:namethemep3, `namethemep4`=:namethemep4, `namethemep5`=:namethemep5, `schoolyear`=:schoolyear WHERE themeid=:themeid";
+      $sth = $conn->prepare($sql);
+      $sth->bindParam(':schoolid', $schoolId);
+      $sth->bindParam(':namethemep1', $namethemep1);
+      $sth->bindParam(':namethemep2', $namethemep2);
+      $sth->bindParam(':namethemep3', $namethemep3);
+      $sth->bindParam(':namethemep4', $namethemep4);
+      $sth->bindParam(':namethemep5', $namethemep5);
+      $sth->bindParam(':schoolyear', $schoolYear);
+      $sth->bindParam(':themeid', $mainThemeId);
+      $sth->execute();
+
+      if ($sth->rowCount() > 0) {
+          logInteractionUpdate($userId, $mainThemeId);
+          $_SESSION['info'] = "Updated successfully.";
+          header("Location: ../index.php?page=hoofdthemalijst");
+      } else {
+          logErrorAndRedirect('Failed to update main theme.', '2', '4');
+      }
+  } catch (\Exception $e) {
+      logErrorAndRedirect('An error occurred. Please try again.', '2', '4');
+  }
+
+  function checkForIllegalCharacters($str)
+  {
+      $illegalChars = array('<', '>', '{', '}', '(', ')', '[', ']', '*', '$', '^', '`', '~', '|', '\\', '\'', '"', ':', ';', ',', '/');
+      foreach ($illegalChars as $char) {
+          if (strpos($str, $char) !== false) {
+              return true;
+          }
+      }
+      return false;
+  }
+
+  function getSchoolIdForUser($userId)
+  {
+      global $conn;
+      $sql = 'SELECT schoolid FROM users WHERE userid=:userid';
+      $sth = $conn->prepare($sql);
+      $sth->bindParam(':userid', $userId);
+      $sth->execute();
+      $school = $sth->fetch(PDO::FETCH_OBJ);
+      return $school ? $school->schoolid : false;
+  }
+
+  function logErrorAndRedirect($errorMessage, $action, $tableId)
+  {
+      global $conn;
+      $sql = 'INSERT INTO logs (userid, useragent, action, tableid, interactionid, error) VALUES ("9999", :useragent, :action, :tableid, 0, 5)';
+      $sth = $conn->prepare($sql);
+      $sth->bindValue(':useragent', $_SESSION['useragent']);
+      $sth->bindParam(':action', $action);
+      $sth->bindParam(':tableid', $tableId);
+      $sth->execute();
+      $_SESSION['error'] = $errorMessage;
+      header("Location: ../index.php?page=hoofdthemalijst");
+      exit;
+  }
+
+  function logInteractionUpdate($userId, $interactionId)
+  {
+      global $conn;
+      $sql = "INSERT INTO `logs` (`userid`, `useragent`, `action`, `tableid`, `interactionid`) VALUES (:userid, :useragent, '2', '4', :interactionid)";
+      $sth = $conn->prepare($sql);
+      $sth->bindParam(':userid', $userId);
+      $sth->bindParam(':useragent', $_SESSION['useragent']);
+      $sth->bindParam(':interactionid', $interactionId);
+      $sth->execute();
   }
 ?>

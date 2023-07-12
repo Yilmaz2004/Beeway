@@ -21,9 +21,9 @@
     $loggedInUserRole = $_SESSION['userrole'];
 
     // Get the schoolid and role of the logged-in user
-    $sql = 'SELECT schoolid, role FROM users WHERE userid=:userid';
+    $sql = 'SELECT schoolid, role FROM users WHERE userid = :userid';
     $sth = $conn->prepare($sql);
-    $sth->bindParam(':userid', $loggedInUserId);
+    $sth->bindParam(':userid', $loggedInUserId, PDO::PARAM_INT);
     $sth->execute();
     $loggedInUser = $sth->fetch(PDO::FETCH_OBJ);
 
@@ -38,10 +38,10 @@
 
     if ($loggedInUserRole === 'admin' && $loggedInUserSchoolId !== '0') {
       // Check if the logged-in user and the user being deleted are in the same school
-      $sql = 'SELECT COUNT(*) AS count FROM users WHERE userid=:userid AND schoolid=:schoolid';
+      $sql = 'SELECT COUNT(*) AS count FROM users WHERE userid = :userid AND schoolid = :schoolid';
       $sth = $conn->prepare($sql);
-      $sth->bindParam(':userid', $loggedInUserId);
-      $sth->bindParam(':schoolid', $loggedInUserSchoolId);
+      $sth->bindParam(':userid', $loggedInUserId, PDO::PARAM_INT);
+      $sth->bindParam(':schoolid', $loggedInUserSchoolId, PDO::PARAM_INT);
       $sth->execute();
       $sameSchoolCount = $sth->fetchColumn();
 
@@ -53,9 +53,9 @@
       }
 
       // Check if the user being deleted is the last school admin
-      $sql = 'SELECT COUNT(*) AS count FROM users WHERE schoolid=:schoolid AND role=:role';
+      $sql = 'SELECT COUNT(*) AS count FROM users WHERE schoolid = :schoolid AND role = :role';
       $sth = $conn->prepare($sql);
-      $sth->bindParam(':schoolid', $loggedInUserSchoolId);
+      $sth->bindParam(':schoolid', $loggedInUserSchoolId, PDO::PARAM_INT);
       $sth->bindValue(':role', '1');
       $sth->execute();
       $schoolAdminCount = $sth->fetchColumn();
@@ -69,9 +69,9 @@
     }
 
     // Check if the user being deleted has role = 2
-    $sql = 'SELECT role FROM users WHERE userid=:userid';
+    $sql = 'SELECT role FROM users WHERE userid = :userid';
     $sth = $conn->prepare($sql);
-    $sth->bindParam(':userid', $userId);
+    $sth->bindParam(':userid', $userId, PDO::PARAM_INT);
     $sth->execute();
     $userRole = $sth->fetchColumn();
 
@@ -89,8 +89,7 @@
     try {
       $conn->beginTransaction();
 
-      $sql = "UPDATE users SET archive=:archive, deletedby=:deletedby, deletedat=:deletedat
-              WHERE userid=:userid";
+      $sql = "UPDATE users SET archive = :archive, deletedby = :deletedby, deletedat = :deletedat WHERE userid = :userid";
       $sth = $conn->prepare($sql);
       $sth->execute([
         ':archive' => $archive,
@@ -99,16 +98,13 @@
         ':userid' => $userId
       ]);
 
-      $sql1 = "UPDATE linkgroups SET archive=1
-              WHERE userid=:userid
-              AND archive<>1";
+      $sql1 = "UPDATE linkgroups SET archive = 1 WHERE userid = :userid AND archive <> 1";
       $sth1 = $conn->prepare($sql1);
       $sth1->execute([
         ':userid' => $userId
       ]);
 
-      $sql2 = "INSERT INTO `logs` (`userid`, `useragent`, `action`, `tableid`, `interactionid`)
-              VALUES (:userid, :useragent, '3', '6', :interactionid)";
+      $sql2 = "INSERT INTO logs (userid, useragent, action, info, tableid, interactionid) VALUES (:userid, :useragent, '3', 'user deleted', '6', :interactionid)";
       $sth2 = $conn->prepare($sql2);
       $sth2->execute([
         ':userid' => $loggedInUserId,
@@ -123,12 +119,22 @@
     } catch (\Exception $e) {
       $conn->rollBack();
 
+      $sql = 'INSERT INTO logs (userid, useragent, action, tableid, interactionid, error) VALUES ("9999", :useragent, 3, 6, 0, 5)';
+      $sth = $conn->prepare($sql);
+      $sth->bindValue(':useragent', $_SESSION['useragent']);
+      $sth->execute();
+
       $_SESSION['error'] = 'Er ging iets mis, probeer het opnieuw.';
       insertLog($loggedInUserId, '3', $userId);
-      header("location: ../index.php?page=edituser&userid={$userId}");
+      header("Location: ../index.php?page=edituser&userid={$userId}");
       exit;
     }
   } else {
+    $sql = 'INSERT INTO logs (userid, useragent, action, tableid, interactionid, error) VALUES ("9999", :useragent, 3, 6, "0", "1")';
+    $sth = $conn->prepare($sql);
+    $sth->bindValue(':useragent', $_SESSION['useragent']);
+    $sth->execute();
+
     $_SESSION['error'] = 'Ongeautoriseerde toegang. Log in met de juiste referenties.';
     header('location: ../index.php?page=dashboard');
     exit;
@@ -138,8 +144,7 @@
   function insertLog($userId, $errorCode, $interactionId) {
     global $conn;
 
-    $sql = "INSERT INTO `logs` (`userid`, `useragent`, `action`, `tableid`, `interactionid`, `errorcode`)
-            VALUES (:userid, :useragent, '3', '6', :interactionid, :errorcode)";
+    $sql = "INSERT INTO logs (userid, useragent, action, tableid, interactionid, errorcode) VALUES (:userid, :useragent, '3', '6', :interactionid, :errorcode)";
     $sth = $conn->prepare($sql);
     $sth->execute([
       ':userid' => $userId,

@@ -2,59 +2,81 @@
   require_once '../private/dbconnect.php';
   session_start();
 
-  // try {
-    if ($_POST['namethemep1'] == '' || $_POST['namethemep2'] == '' || $_POST['namethemep3'] == '' || $_POST['namethemep4'] == '' || $_POST['namethemep5'] == '' || $_POST['schoolyear'] == '') {
-      $_SESSION['error'] = "vul ff iets in";
-      header("location: ../index.php?page=addmaintheme");
-    } elseif (checkForIllegalCharacters($_POST['namethemep1']) || checkForIllegalCharacters($_POST['namethemep2']) || checkForIllegalCharacters($_POST['namethemep3']) || checkForIllegalCharacters($_POST['namethemep4']) || checkForIllegalCharacters($_POST['namethemep5']) || checkForIllegalCharacters($_POST['schoolyear'])) {
-      $_SESSION['error'] = "illegal character used";
-      header("location: ../index.php?page=addmaintheme");
-    } else {
+  if (isset($_SESSION['userid'], $_SESSION['userrole']) && ($_SESSION['userrole'] === 'superuser' || $_SESSION['userrole'] === 'admin')) {
+    try {
+      if (empty($_POST['namethemep1']) || empty($_POST['namethemep2']) || empty($_POST['namethemep3']) || empty($_POST['namethemep4']) || empty($_POST['namethemep5']) || empty($_POST['schoolyear'])) {
+        $_SESSION['error'] = "Please fill in all required fields.";
+        header("Location: ../index.php?page=addmaintheme");
+        exit;
+      } elseif (checkForIllegalCharacters($_POST['namethemep1']) || checkForIllegalCharacters($_POST['namethemep2']) || checkForIllegalCharacters($_POST['namethemep3']) || checkForIllegalCharacters($_POST['namethemep4']) || checkForIllegalCharacters($_POST['namethemep5']) || checkForIllegalCharacters($_POST['schoolyear'])) {
+        $_SESSION['error'] = "Illegal character used.";
+        header("Location: ../index.php?page=addmaintheme");
+        exit;
+      }
 
-      $sql = "select schoolid from users WHERE userid=:userid";
-      $sth1 = $conn->prepare($sql);
-      $sth1->bindParam(':userid', $_SESSION['userid']);
-      $sth1->execute();
+      $sql = "SELECT schoolid FROM users WHERE userid = :userid";
+      $stmt1 = $conn->prepare($sql);
+      $stmt1->bindParam(':userid', $_SESSION['userid']);
+      $stmt1->execute();
 
-     while ($school = $sth1->fetch(PDO::FETCH_OBJ)) {
-
+      while ($school = $stmt1->fetch(PDO::FETCH_OBJ)) {
         $sql = "INSERT INTO maintheme (`schoolid`, `namethemep1`, `namethemep2`, `namethemep3`, `namethemep4`, `namethemep5`, `schoolyear`)
                 VALUES (:schoolid, :namethemep1, :namethemep2, :namethemep3, :namethemep4, :namethemep5, :schoolyear)";
-        $sth = $conn->prepare($sql);
-        $sth->bindParam(':schoolid', $school->schoolid);
-        $sth->bindParam(':namethemep1', $_POST['namethemep1']);
-        $sth->bindParam(':namethemep2', $_POST['namethemep2']);
-        $sth->bindParam(':namethemep3', $_POST['namethemep3']);
-        $sth->bindParam(':namethemep4', $_POST['namethemep4']);
-        $sth->bindParam(':namethemep5', $_POST['namethemep5']);
-        $sth->bindParam(':schoolyear', $_POST['schoolyear']);
-        $sth->execute();
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(':schoolid', $school->schoolid);
+        $stmt->bindParam(':namethemep1', $_POST['namethemep1']);
+        $stmt->bindParam(':namethemep2', $_POST['namethemep2']);
+        $stmt->bindParam(':namethemep3', $_POST['namethemep3']);
+        $stmt->bindParam(':namethemep4', $_POST['namethemep4']);
+        $stmt->bindParam(':namethemep5', $_POST['namethemep5']);
+        $stmt->bindParam(':schoolyear', $_POST['schoolyear']);
+        $stmt->execute();
 
-         $lastInsertedId = $conn->lastInsertId();
+        $lastInsertedId = $conn->lastInsertId();
 
-   if ($lastInsertedId) {
+        if ($lastInsertedId) {
+          $sql = "INSERT INTO `logs` (`userid`, `action`, `tableid`, `interactionid`) VALUES (:userid, '1', '4', :interactionid)";
+          $stmt = $conn->prepare($sql);
+          $stmt->bindParam(':userid', $_SESSION['userid']);
+          $stmt->bindParam(':interactionid', $lastInsertedId);
+          $stmt->execute();
 
-       $sql = "INSERT INTO `logs` (`userid`, `action`, `tableid`, `interactionid`) VALUES (:userid, '1', '4', :interactionid)";
-       $sth = $conn->prepare($sql);
-       $sth->bindParam(':userid', $_SESSION['userid']);
-       $sth->bindParam(':interactionid', $lastInsertedId);
-       $sth->execute();
+          $_SESSION['info'] = 'Main theme added successfully.';
+          header('Location: ../index.php?page=hoofdthemalijst');
+          exit;
+        } else {
+          $sql = 'INSERT INTO logs (userid, useragent, action, tableid, interactionid, error) VALUES ("9999", :useragent, 1, 4, 0, 5)';
+          $stmt = $conn->prepare($sql);
+          $stmt->bindValue(':useragent', $_SESSION['useragent']);
+          $stmt->execute();
 
-       $_SESSION['info'] = 'hoofdthema toegevoegd';
-       header('location: ../index.php?page=hoofdthemalijst');
-
-     } else {
-       $_SESSION['error'] = 'er ging iets mis. Pech';
-       header('location: ../index.php?page=hoofdthemalijst');
+          $_SESSION['error'] = 'Failed to add main theme.';
+          header('Location: ../index.php?page=hoofdthemalijst');
+          exit;
+        }
       }
-    }
-  }
-  //  catch (\Exception $e) {
-  //   $_SESSION['error'] = "er ging iets mis. Pech";
-  //   header("location: ../index.php?page=userlijst");
-  // }
+    } catch (\Exception $e) {
+      $sql = 'INSERT INTO logs (userid, useragent, action, tableid, interactionid, error) VALUES ("9999", :useragent, 1, 4, 0, 5)';
+      $stmt = $conn->prepare($sql);
+      $stmt->bindValue(':useragent', $_SESSION['useragent']);
+      $stmt->execute();
 
-  function checkForIllegalCharacters($str) { // check for iliegal characters
+      $_SESSION['error'] = 'An error occurred. Please try again.';
+      header('Location: ../index.php?page=userlijst');
+      exit;
+    }
+  } else {
+    $sql = 'INSERT INTO logs (userid, useragent, action, tableid, interactionid, error) VALUES ("9999", :useragent, 1, 4, 0, 1)';
+    $stmt = $conn->prepare($sql);
+    $stmt->bindValue(':useragent', $_SESSION['useragent']);
+    $stmt->execute();
+
+    $_SESSION['error'] = 'Unauthorized access. Please log in with appropriate credentials.';
+    header('Location: ../index.php?page=dashboard');
+    exit;
+  }
+
+  function checkForIllegalCharacters($str) {
     $illegalChars = array('<', '>', '{', '}', '(', ')', '[', ']', '*', '$', '^', '`', '~', '|', '\\', '\'', '"', ':', ';', ',', '/');
     foreach ($illegalChars as $char) {
       if (strpos($str, $char) !== false) {

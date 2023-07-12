@@ -4,7 +4,6 @@ function myFunction() { // search funtcion on dashboard
     filter = input.value.toUpperCase();
     table = document.getElementsByClassName("beewaylijsttable")[0];
     tr = table.getElementsByTagName("tr");
-
     for (i = 0; i < tr.length; i++) {
         td = tr[i].getElementsByTagName("td")[0];
         if (td) {

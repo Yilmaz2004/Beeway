@@ -86,7 +86,6 @@
       <div class="cell vakgebied">
         <h2 id="orange">VAKGEBIED</h2>
         <select name="vakgebiedid" id="vakgebied" required>
-          <!-- <optgroup label="Selecteer een vakgebied"> -->
             <option value="">-- selecteer een vakgebied --</option>
             <?php
               $sql = 'SELECT disciplinename, disciplineid
@@ -106,7 +105,6 @@
                 echo '<option value="'.$disciplines->disciplineid.'" '.$selected.'>'.$disciplines->disciplinename.'</option>';
               }
             ?>
-          <!-- </optgroup> -->
         </select>
       </form>
     </div>

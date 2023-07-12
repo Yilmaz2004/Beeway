@@ -11,7 +11,7 @@ function showCheckboxes() {
   }
 }
 
-$(document).ready(function(){
+document.addEventListener("DOMContentLoaded", function() {
   const select = document.getElementById("rolselect");
   const input = document.getElementById("klassenselect");
 

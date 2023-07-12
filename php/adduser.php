@@ -4,6 +4,11 @@
 
   // Check user privileges
   if (!(isset($_SESSION['userid'], $_SESSION['userrole']) && ($_SESSION['userrole'] === 'superuser' || $_SESSION['userrole'] === 'admin'))) {
+    $sql = 'INSERT INTO logs (userid, useragent, action, tableid, interactionid, error) VALUES ("9999", :useragent, 1, 6, 0, 1)';
+    $stmt = $conn->prepare($sql);
+    $stmt->bindValue(':useragent', $_SESSION['useragent']);
+    $stmt->execute();
+
     $_SESSION['error'] = 'Unauthorized access. Please log in with appropriate credentials.';
     header('location: ../index.php?page=dashboard');
     exit;
@@ -13,11 +18,7 @@
   $requiredFields = ['firstname', 'lastname', 'email', 'password'];
   foreach ($requiredFields as $field) {
     if (empty($_POST[$field])) {
-      $_SESSION['school'] = $_POST['school'];
-      $_SESSION['firstname'] = $_POST['firstname'];
-      $_SESSION['lastname'] = $_POST['lastname'];
-      $_SESSION['email'] = $_POST['email'];
-      $_SESSION['error'] = 'Please fill in all required fields';
+      $_SESSION['error'] = 'Please fill in all required fields.';
       header('Location: ../index.php?page=adduser');
       exit;
     }
@@ -28,7 +29,7 @@
   $inputFields = ['firstname', 'lastname', 'email', 'password'];
   foreach ($inputFields as $field) {
     if (strpbrk($_POST[$field], implode('', $illegalCharacters))) {
-      $_SESSION['error'] = 'Illegal character used';
+      $_SESSION['error'] = 'Illegal character used.';
       header('Location: ../index.php?page=adduser');
       exit;
     }
@@ -40,27 +41,20 @@
     // Check if the role value is valid
     $role = $_POST['role'];
     if ($role !== '0' && $role !== '1') {
-      $_SESSION['school'] = $_POST['school'];
-      $_SESSION['firstname'] = $_POST['firstname'];
-      $_SESSION['lastname'] = $_POST['lastname'];
-      $_SESSION['email'] = $_POST['email'];
-      $_SESSION['error'] = 'Invalid role selected';
+      $_SESSION['error'] = 'Invalid role selected.';
       header('Location: ../index.php?page=adduser');
       exit;
     }
 
     // Check if the email is already in use
     $email = $_POST['email'];
-    $sql = 'SELECT COUNT(*) AS count FROM users WHERE email = :email';
-    $sth = $conn->prepare($sql);
-    $sth->bindValue(':email', $email);
-    $sth->execute();
-    $emailCount = $sth->fetchColumn();
+    $sqlEmailCount = 'SELECT COUNT(*) AS count FROM users WHERE email = :email';
+    $stmtEmailCount = $conn->prepare($sqlEmailCount);
+    $stmtEmailCount->bindValue(':email', $email);
+    $stmtEmailCount->execute();
+    $emailCount = $stmtEmailCount->fetchColumn();
 
     if ($emailCount > 0) {
-      $_SESSION['school'] = $_POST['school'];
-      $_SESSION['firstname'] = $_POST['firstname'];
-      $_SESSION['lastname'] = $_POST['lastname'];
       $_SESSION['error'] = 'Email already in use. Please choose a different email.';
       header('Location: ../index.php?page=adduser');
       exit;
@@ -72,22 +66,22 @@
       // Retrieve schoolid for admin user
       $adminId = $_SESSION['userid'];
       $sqlAdmin = 'SELECT schoolid FROM users WHERE userid = :adminId';
-      $sthAdmin = $conn->prepare($sqlAdmin);
-      $sthAdmin->bindValue(':adminId', $adminId);
-      $sthAdmin->execute();
-      $schoolId = $sthAdmin->fetchColumn();
+      $stmtAdmin = $conn->prepare($sqlAdmin);
+      $stmtAdmin->bindValue(':adminId', $adminId);
+      $stmtAdmin->execute();
+      $schoolId = $stmtAdmin->fetchColumn();
 
       if (!$schoolId) {
-        throw new Exception('Failed to retrieve schoolid for admin user');
+        throw new Exception('Failed to retrieve schoolid for admin user.');
       }
     } else {
       $schoolId = $_POST['school'];
     }
 
-    $sql = "INSERT INTO users (`schoolid`, `firstname`, `lastname`, `email`, `password`, `role`, `createdby`, `updatedby`)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-    $stmt = $conn->prepare($sql);
-    $stmt->execute([$schoolId, $_POST['firstname'], $_POST['lastname'], $_POST['email'], $password, $_POST['role'], $_SESSION['userid'], $_SESSION['userid']]);
+    $sqlInsertUser = "INSERT INTO users (schoolid, firstname, lastname, email, password, role, createdby, updatedby)
+                      VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+    $stmtInsertUser = $conn->prepare($sqlInsertUser);
+    $stmtInsertUser->execute([$schoolId, $_POST['firstname'], $_POST['lastname'], $_POST['email'], $password, $_POST['role'], $_SESSION['userid'], $_SESSION['userid']]);
 
     $userId = $conn->lastInsertId();
 
@@ -96,36 +90,37 @@
       $selectedGroups = $_POST['groepen'];
 
       foreach ($selectedGroups as $groupId) {
-        $sql = "INSERT INTO `linkgroups` (`userid`, `groupid`)
-                VALUES (?, ?)";
-        $stmt = $conn->prepare($sql);
-        $stmt->execute([$userId, $groupId]);
+        $sqlInsertLinkGroup = "INSERT INTO linkgroups (userid, groupid)
+                               VALUES (?, ?)";
+        $stmtInsertLinkGroup = $conn->prepare($sqlInsertLinkGroup);
+        $stmtInsertLinkGroup->execute([$userId, $groupId]);
       }
 
-      $sql2 = "INSERT INTO `logs` (`userid`, `useragent`, `action`, `tableid`, `interactionid`)
-              VALUES (:userid, :useragent, '1', '6', :interactionid)";
-      $sth2 = $conn->prepare($sql2);
-      $sth2->bindParam(':userid', $_SESSION['userid']);
-      $sth2->bindParam(':useragent', $_SESSION['useragent']);
-      $sth2->bindParam(':interactionid', $userId);
-      $sth2->execute();
+      $sqlInsertLog = "INSERT INTO logs (userid, useragent, action, info, tableid, interactionid)
+                       VALUES (:userid, :useragent, '1', 'user added', '6', :interactionid)";
+      $stmtInsertLog = $conn->prepare($sqlInsertLog);
+      $stmtInsertLog->bindParam(':userid', $_SESSION['userid']);
+      $stmtInsertLog->bindParam(':useragent', $_SESSION['useragent']);
+      $stmtInsertLog->bindParam(':interactionid', $userId);
+      $stmtInsertLog->execute();
 
       $conn->commit();
 
-      $_SESSION['info'] = 'User added';
+      $_SESSION['info'] = 'User added.';
       header('Location: ../index.php?page=userlijst');
       exit;
     } else {
-      throw new Exception('Failed to insert user into database');
+      throw new Exception('Failed to insert user into the database.');
     }
   } catch (Exception $e) {
     $conn->rollback();
 
-    $_SESSION['school'] = $_POST['school'];
-    $_SESSION['firstname'] = $_POST['firstname'];
-    $_SESSION['lastname'] = $_POST['lastname'];
-    $_SESSION['email'] = $_POST['email'];
-    $_SESSION['error'] = 'Failed to add user';
+    $sqlInsertErrorLog = 'INSERT INTO logs (userid, useragent, action, tableid, interactionid, error) VALUES ("9999", :useragent, 1, 6, 0, 5)';
+    $stmtInsertErrorLog = $conn->prepare($sqlInsertErrorLog);
+    $stmtInsertErrorLog->bindValue(':useragent', $_SESSION['useragent']);
+    $stmtInsertErrorLog->execute();
+
+    $_SESSION['error'] = 'Failed to add user.';
     header('Location: ../index.php?page=adduser');
     exit;
   }

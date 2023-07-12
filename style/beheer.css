@@ -73,7 +73,7 @@
 
 .addedit {
   width: 1300px;
-  height: 675px;
+  height: 630px;
   background: #333333;
   top: 52%;
   left: 50%;
@@ -83,7 +83,9 @@
   border-radius: 25px;
 }
 .addedit label,
-.addeditschool label {
+.addeditschool label,
+.addeditdiscipline label,
+.addgroups label {
   color: #ffc107;
 }
 .addeditBy {
@@ -121,7 +123,49 @@
 
 /*---------------------vakken toevoegen/aanpassen--------------------*/
 
+.addeditdiscipline {
+  width: 550px;
+  height: 450px;
+  background: #333333;
+  top: 52%;
+  left: 50%;
+  position: absolute;
+  transform: translate(-50%, -50%);
+  padding: 20px 50px;
+  border-radius: 25px;
+}
+
+.adddisciplinerbtn {
+  position: absolute;
+  bottom: 35px;
+  right: 35%;
+  border: none;
+  height: 35px;
+  width: 215px;
+  background: #737373;
+  font-size: 15px;
+  border-radius: 10px;
+}
+.adddisciplinerbtn:hover {
+  background: #ffc107;
+}
+
 /*---------------------hoofdthema toevoegen/aanpassen----------------*/
+
+.addmainthemebtn {
+  position: absolute;
+  bottom: 35px;
+  right: 42%;
+  border: none;
+  height: 35px;
+  width: 250px;
+  background: #737373;
+  font-size: 15px;
+  border-radius: 10px;
+}
+.addmainthemebtn:hover {
+  background: #ffc107;
+}
 
 /*---------------------users toevoegen/aanpassen---------------------*/
 
@@ -166,6 +210,7 @@
 
 #checkboxes {
   display: none;
+  padding: 5px;
   border: 1px #dadada solid;
   position: absolute;
   background: #4d4d4d;
