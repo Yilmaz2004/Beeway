@@ -1,7 +1,7 @@
 <?php
   $servername = "localhost";
-  $username = "beeway";
-  $password = "qwerty";
+  $username = "Beeway";
+  $password = "Welkom1";
 
   try {
     $conn = new PDO("mysql:host=$servername;dbname=beeway", $username, $password);

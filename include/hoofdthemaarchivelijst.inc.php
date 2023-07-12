@@ -36,7 +36,7 @@
     <br>
       <?php
       $sql = 'SELECT schoolid FROM users
-              WHERE userid= :userid';
+              WHERE userid= :userid and archive=0';
       $sth = $conn->prepare($sql);
       $sth->bindParam(':userid', $_SESSION['userid']);
       $sth->execute();
@@ -44,11 +44,11 @@
         $schoolid = $school -> schoolid;
       }
         if (isset($_GET['offset'])) {
-          $offset = $_GET['offset'] * 4;
+          $offset = $_GET['offset'] * 30;
         } else {
           $sql = 'SELECT * FROM maintheme
                   WHERE schoolid=:schoolid and archive=1
-                  LIMIT 4';
+                  LIMIT 30';
           $sth = $conn->prepare($sql);
           $sth->bindParam(':schoolid', $schoolid);
           $sth->execute();
@@ -84,7 +84,7 @@
                 <td><b>'.$maintheme->namethemep4.'</b></td>
                 <td><b>'.$maintheme->namethemep5.'</b></td>
                 <td><b>'.$archive.'</b></td>
-                <td><a '; ?> onclick='return confirm("Weet je zekker dat je deze beeway wilt terughalen!?")' <?php echo ' href="php/hoofdthemaarchive.php?themeid='.$maintheme->themeid.'" class="deletebutton">Hoofdthema terughalen</a></td>
+                <td><a '; ?> onclick='return confirm("Weet je zekker dat je deze beeway wilt terughalen!?")' <?php echo ' href="php/getbackhoofdthema.php?themeid='.$maintheme->themeid.'" class="deletebutton">Hoofdthema terughalen</a></td>
               </tr>
             ';
           }
